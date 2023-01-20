@@ -24,7 +24,7 @@
   "homepage": "https://github.com/DeadRiceCake/chatting-service#readme",
   "lint-staged": {
     "./src/**/*.ts": [
-      "npm run lilnt:fix"
+      "npm run lint:fix"
     ]
   },
   "dependencies": {
