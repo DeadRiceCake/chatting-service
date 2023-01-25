@@ -11,3 +11,7 @@ export const APP_CONFIG = {
   API_PREFIX: process.env.API_PREFIX || '/api',
   PORT: Number(process.env.PORT) || 3000,
 };
+
+export const SWAGGER_CONFIG = {
+  ROUTE: String(process.env.SWAGGER_ROUTE),
+};

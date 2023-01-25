@@ -5,6 +5,7 @@ import { Container } from 'typedi';
 import { useContainer, useExpressServer } from 'routing-controllers';
 import { routingControllerOptions } from './config/RoutingConfig';
 import morgan from 'morgan';
+import { useSwagger } from './Swagger';
 // TODO: swagger 적용하기
 // TODO: sentry 적용하기
 
@@ -46,6 +47,7 @@ export class App {
     try {
       useContainer(Container);
       useExpressServer(this.app, routingControllerOptions);
+      useSwagger(this.app);
 
       this.app.listen(port, () => {
         console.log(`서버 가동중... 포트번호: ${port}`);
