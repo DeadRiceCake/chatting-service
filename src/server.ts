@@ -1,12 +1,11 @@
-import express, {Express, Request, Response} from 'express';
+import { App } from './App';
+import { APP_CONFIG } from './config/EnvConfig';
 
-const app: Express = express();
-const port = 5000;
+try {
+  const app = new App();
+  const port: number = APP_CONFIG.PORT;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Typescript + Node.js + Express Server');
-});
-
-app.listen(port, () => {
-  console.log(`서버 가동 중... 포트번호: ${port}`);
-});
+  app.createExpressServer(port);
+} catch (error) {
+  console.log(error);
+}
