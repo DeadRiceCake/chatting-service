@@ -15,3 +15,12 @@ export const APP_CONFIG = {
 export const SWAGGER_CONFIG = {
   ROUTE: String(process.env.SWAGGER_ROUTE),
 };
+
+export const DB_CONFIG = {
+  DB_HOST: String(process.env.MY_SQL_DB_HOST),
+  DB_USER: String(process.env.MY_SQL_DB_USER),
+  DB_PASSWORD: String(process.env.MY_SQL_DB_PASSWORD),
+  DB_PORT: String(process.env.MY_SQL_DB_PORT),
+  DB_DATABASE: String(process.env.MY_SQL_DB_DATABASE),
+  DB_CONNECTION_LIMIT: Number(process.env.MY_SQL_DB_CONNECTION_LIMIT),
+};

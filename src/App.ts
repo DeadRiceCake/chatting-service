@@ -4,9 +4,9 @@ import bodyParser from 'body-parser';
 import { Container } from 'typedi';
 import { useContainer, useExpressServer } from 'routing-controllers';
 import { routingControllerOptions } from './config/RoutingConfig';
+import { createDBPool } from './Database';
 import morgan from 'morgan';
 import { useSwagger } from './Swagger';
-// TODO: swagger 적용하기
 // TODO: sentry 적용하기
 
 export class App {
@@ -23,8 +23,7 @@ export class App {
    */
   private async setDatabase(): Promise<void> {
     try {
-      // TODO: 데이터베이스 연결하기
-      // await createDatabaseConnection();
+      createDBPool();
     } catch (error) {
       console.log(error);
     }
