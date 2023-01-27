@@ -34,6 +34,7 @@ export const createDBPool = () => {
 export const execute = <T>(query: string, params: string[] | object): Promise<T> => {
   try {
     if (!pool) throw new Error('풀이 생성되지 않았습니다. 풀이 생성되었는지 확인해주세요.');
+
     return new Promise<T>((resolve, reject) => {
       pool.query(query, params, (error, results) => {
         if (error) reject(error);
