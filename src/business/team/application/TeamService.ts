@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { TeamRepository } from '../repository/TeamRepository';
+import { Team } from '../model/TeamModel';
 
 @Service()
 export class TeamService {
@@ -15,7 +16,7 @@ export class TeamService {
    * @param limit limit
    * @param sort 기본값은 id의 오름차순, desc면 id의 내림차순
    */
-  public async selectAllTeams(offset: number, limit: number, sort?: string): Promise<object[]> {
+  public async selectAllTeams(offset: number, limit: number, sort?: string): Promise<Team[]> {
     try {
       const allTeams = await this.teamRepository.selectAllTeam(offset, limit, sort);
 

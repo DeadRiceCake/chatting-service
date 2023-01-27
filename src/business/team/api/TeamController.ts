@@ -4,6 +4,7 @@ import { SelectAllTeamModel } from '../model/TeamModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service, Inject } from 'typedi';
+import { Team } from '../model/TeamModel';
 
 @JsonController('/teams')
 @Service()
@@ -25,7 +26,7 @@ export class TeamController {
       },
     },
   })
-  @ResponseSchema(SelectAllTeamModel)
+  @ResponseSchema(Team)
   public async getAll(@QueryParams() selectAllTeamModel: SelectAllTeamModel, @Res() res: Response) {
     try {
       const allTeams = await this.teamService.selectAllTeams(

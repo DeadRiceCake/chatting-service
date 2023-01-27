@@ -1,4 +1,18 @@
-import { IsPositive, IsNumber, Max, IsString, IsOptional } from 'class-validator';
+import { IsPositive, IsNumber, Max, IsString, IsOptional, IsBoolean } from 'class-validator';
+
+export class Team {
+  @IsNumber()
+  public id!: number;
+
+  @IsString()
+  public name!: string;
+
+  @IsString()
+  public league!: string;
+
+  @IsBoolean()
+  public isActive!: boolean;
+}
 
 export class SelectAllTeamModel {
   @IsNumber()

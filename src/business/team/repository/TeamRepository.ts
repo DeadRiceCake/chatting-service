@@ -1,9 +1,10 @@
 import { execute } from '../../../Database';
 import { Service } from 'typedi';
+import { Team } from '../model/TeamModel';
 
 @Service()
 export class TeamRepository {
-  public async selectAllTeam(offset: number, limit: number, sort?: string): Promise<object[]> {
+  public async selectAllTeam(offset: number, limit: number, sort?: string): Promise<Team[]> {
     try {
       const query = `
         SELECT 
@@ -30,7 +31,7 @@ export class TeamRepository {
           ?, ?
       `;
 
-      const executeQueryResult = await execute<object[]>(query, [offset, limit]);
+      const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
       return executeQueryResult;
     } catch (error) {
       console.log(error);

@@ -1,7 +1,6 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { getMetadataArgsStorage } from 'routing-controllers';
-import { getFromContainer, MetadataStorage } from 'class-validator';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { routingControllerOptions } from './config/RoutingConfig';
@@ -16,7 +15,6 @@ export function useSwagger(app: express.Application) {
   // Parse class-validator classes into JSON Schema:
   const schemas = validationMetadatasToSchemas({
     refPointerPrefix: '#/components/schemas',
-    classValidatorMetadataStorage: getFromContainer(MetadataStorage),
   }) as SchemaObject;
 
   // Parse routing-controllers classes into OPENAPI spec:
@@ -33,8 +31,8 @@ export function useSwagger(app: express.Application) {
       },
     },
     info: {
-      title: 'JaeBook Server',
-      description: 'JaeBook API',
+      title: 'chattin Server',
+      description: 'chattin Server API',
       version: '1.0.0',
     },
   });
