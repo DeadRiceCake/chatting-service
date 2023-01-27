@@ -1,6 +1,6 @@
 import { TeamService } from '../application/TeamService';
 import { JsonController, Get, Res, HttpCode, QueryParams } from 'routing-controllers';
-import { SelectAllTeamModel } from '../model/TeamModel';
+import { Paging } from '../../../common/model/PagingModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service, Inject } from 'typedi';
@@ -27,13 +27,9 @@ export class TeamController {
     },
   })
   @ResponseSchema(Team)
-  public async getAll(@QueryParams() selectAllTeamModel: SelectAllTeamModel, @Res() res: Response) {
+  public async getAll(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
-      const allTeams = await this.teamService.selectAllTeams(
-        selectAllTeamModel.offset,
-        selectAllTeamModel.limit,
-        selectAllTeamModel.sort,
-      );
+      const allTeams = await this.teamService.selectAllTeams(paging.offset, paging.limit, paging.sort);
 
       if (!allTeams.length) {
         return res.status(204).send(allTeams);
