@@ -1,7 +1,8 @@
 import { Service } from 'typedi';
 import { execute } from '../../../common/module/Database';
-import { Service } from 'typedi';
 import { Team } from '../model/TeamModel';
+import { teamQuery } from './TeamQuery';
+import { DMLResult } from '../../../common/model/DMLResultModel';
 
 @Service()
 export class TeamRepository {
@@ -20,6 +21,23 @@ export class TeamRepository {
       }
 
       const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
+
+      return executeQueryResult;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  /**
+   * 팀을 생성한다.
+   * @param name 팀명
+   * @param league 리그 명
+   */
+  public async insertTeam(name: string, league: string): Promise<DMLResult> {
+    try {
+      const executeQueryResult = await execute<DMLResult>(teamQuery.insertTeam, [name, league]);
+
       return executeQueryResult;
     } catch (error) {
       console.log(error);

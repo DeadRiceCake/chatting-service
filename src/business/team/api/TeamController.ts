@@ -1,5 +1,5 @@
 import { TeamService } from '../application/TeamService';
-import { JsonController, Get, Res, HttpCode, QueryParams } from 'routing-controllers';
+import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body } from 'routing-controllers';
 import { Paging } from '../../../common/model/PagingModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -36,6 +36,23 @@ export class TeamController {
       }
 
       return allTeams;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  @HttpCode(201)
+  @Post('')
+  @OpenAPI({
+    summary: 'team 추가',
+    statusCode: '201',
+  })
+  public async create(@Body() team: Team, @Res() res: Response) {
+    try {
+      const createTeamResult = await this.teamService.createTeam(team.name, team.league);
+
+      return res.status(201).json(createTeamResult);
     } catch (error) {
       console.error(error);
       throw error;
