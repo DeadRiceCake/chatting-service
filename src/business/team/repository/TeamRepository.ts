@@ -1,4 +1,4 @@
-import { execute } from '../../../Database';
+import { execute } from '../../../common/module/Database';
 import { Service } from 'typedi';
 import { Team } from '../model/TeamModel';
 
