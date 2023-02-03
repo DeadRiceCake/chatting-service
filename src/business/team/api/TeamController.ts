@@ -5,6 +5,8 @@ import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service, Inject } from 'typedi';
 import { Team } from '../model/TeamModel';
+import { RESPONSE_CODE } from '../../../config/StatusCode';
+import { CreateTeamResponse } from '../response/TeamResponse';
 
 @JsonController('/teams')
 @Service()
@@ -42,7 +44,7 @@ export class TeamController {
     }
   }
 
-  @HttpCode(201)
+  @HttpCode(RESPONSE_CODE.SUCCESS.CREATED)
   @Post('')
   @OpenAPI({
     summary: 'team 추가',
@@ -50,9 +52,9 @@ export class TeamController {
   })
   public async create(@Body() team: Team, @Res() res: Response) {
     try {
-      const createTeamResult = await this.teamService.createTeam(team.name, team.league);
+      await this.teamService.createTeam(team.name, team.league);
 
-      return res.status(201).json(createTeamResult);
+      return res.status(RESPONSE_CODE.SUCCESS.CREATED).json(new CreateTeamResponse(team));
     } catch (error) {
       console.error(error);
       throw error;

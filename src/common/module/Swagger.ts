@@ -3,8 +3,8 @@ import swaggerUi from 'swagger-ui-express';
 import { getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
-import { routingControllerOptions } from '../../config/RoutingConfig';
-import { SWAGGER_CONFIG } from '../../config/EnvConfig';
+import { routingControllerOptions } from '../../config/Routing';
+import { SWAGGER_CONFIG } from '../../config/Env';
 import { SchemaObject } from 'openapi3-ts';
 
 /**

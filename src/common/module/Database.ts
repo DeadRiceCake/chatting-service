@@ -1,5 +1,5 @@
 import { createPool, Pool } from 'mysql';
-import { DB_CONFIG } from '../../config/EnvConfig';
+import { DB_CONFIG } from '../../config/Env';
 
 let pool: Pool;
 

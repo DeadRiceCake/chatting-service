@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { Container } from 'typedi';
 import { useContainer, useExpressServer } from 'routing-controllers';
-import { routingControllerOptions } from './config/RoutingConfig';
+import { routingControllerOptions } from './config/Routing';
 import { createDBPool } from './common/module/Database';
 import morgan from 'morgan';
 import { useSwagger } from './common/module/Swagger';
