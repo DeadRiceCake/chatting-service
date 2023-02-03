@@ -2,6 +2,7 @@ export const RESPONSE_STATUS = {
   SUCCESS: {
     OK: 'OK',
     CREATED: 'CREATED',
+    NO_CONTENT: 'NO_CONTENT',
   },
 
   REDIRECTION: {

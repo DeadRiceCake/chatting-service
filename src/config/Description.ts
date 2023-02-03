@@ -2,6 +2,7 @@ export const RESPONSE_DESCRIPTION = {
   SUCCESS: {
     OK: '오류가 없습니다.',
     CREATED: '생성되었습니다.',
+    NO_CONTENT: '컨텐츠가 없습니다.',
   },
 
   CLIENT_ERROR: {

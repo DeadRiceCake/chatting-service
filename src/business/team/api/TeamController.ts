@@ -17,7 +17,7 @@ export class TeamController {
     this.teamService = teamService;
   }
 
-  @HttpCode(200)
+  @HttpCode(RESPONSE_CODE.SUCCESS.OK)
   @Get('')
   @OpenAPI({
     summary: 'team 목록 조회',
@@ -34,7 +34,7 @@ export class TeamController {
       const allTeams = await this.teamService.getAllTeam(paging.offset, paging.limit, paging.sort);
 
       if (!allTeams.length) {
-        return res.status(204).send(allTeams);
+        return res.status(RESPONSE_CODE.SUCCESS.NO_CONTENT).send(allTeams);
       }
 
       return allTeams;
@@ -50,6 +50,7 @@ export class TeamController {
     summary: 'team 추가',
     statusCode: '201',
   })
+  @ResponseSchema(CreateTeamResponse)
   public async create(@Body() team: Team, @Res() res: Response) {
     try {
       await this.teamService.createTeam(team.name, team.league);
