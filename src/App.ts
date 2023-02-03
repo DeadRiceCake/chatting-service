@@ -4,9 +4,9 @@ import bodyParser from 'body-parser';
 import { Container } from 'typedi';
 import { useContainer, useExpressServer } from 'routing-controllers';
 import { routingControllerOptions } from './config/RoutingConfig';
-import { createDBPool } from './common/module/Database';
+import { createDBPool } from './Database';
 import morgan from 'morgan';
-import { useSwagger } from './common/module/Swagger';
+import { useSwagger } from './Swagger';
 // TODO: sentry 적용하기
 
 export class App {
