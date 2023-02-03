@@ -29,7 +29,7 @@ export class TeamController {
   @ResponseSchema(Team)
   public async getAll(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
-      const allTeams = await this.teamService.selectAllTeams(paging.offset, paging.limit, paging.sort);
+      const allTeams = await this.teamService.getAllTeam(paging.offset, paging.limit, paging.sort);
 
       if (!allTeams.length) {
         return res.status(204).send(allTeams);
