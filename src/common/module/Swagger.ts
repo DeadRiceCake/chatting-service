@@ -3,8 +3,8 @@ import swaggerUi from 'swagger-ui-express';
 import { getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
-import { routingControllerOptions } from './config/RoutingConfig';
-import { SWAGGER_CONFIG } from './config/EnvConfig';
+import { routingControllerOptions } from '../../config/RoutingConfig';
+import { SWAGGER_CONFIG } from '../../config/EnvConfig';
 import { SchemaObject } from 'openapi3-ts';
 
 /**
@@ -31,8 +31,8 @@ export function useSwagger(app: express.Application) {
       },
     },
     info: {
-      title: 'chattin Server',
-      description: 'chattin Server API',
+      title: 'chatting Server',
+      description: 'chatting Server API',
       version: '1.0.0',
     },
   });
