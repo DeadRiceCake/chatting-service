@@ -1,4 +1,4 @@
-import { APP_CONFIG } from './EnvConfig';
+import { APP_CONFIG } from './Env';
 import { TeamController } from '../business/team/api/TeamController';
 
 export const routingControllerOptions = {
