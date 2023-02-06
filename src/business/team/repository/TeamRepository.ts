@@ -12,7 +12,7 @@ export class TeamRepository {
    * @param limit limit
    * @param sort 정렬 기준
    */
-  public async selectAllTeam(offset: number, limit: number, sort?: string): Promise<Team[]> {
+  public async selectAllTeams(offset: number, limit: number, sort?: string): Promise<Team[]> {
     try {
       let query = teamQuery.selectTeamListOrderByIdASC;
 

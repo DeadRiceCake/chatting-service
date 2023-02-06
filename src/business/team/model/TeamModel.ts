@@ -3,7 +3,7 @@ import { IsNumber, IsString, IsBoolean, IsOptional } from 'class-validator';
 export class Team {
   @IsOptional()
   @IsNumber()
-  public id?: number;
+  public id!: number;
 
   @IsString()
   public name!: string;

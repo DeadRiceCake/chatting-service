@@ -17,9 +17,9 @@ export class TeamService {
    * @param limit limit
    * @param sort 기본값은 id의 오름차순, desc면 id의 내림차순
    */
-  public async getAllTeam(offset: number, limit: number, sort?: string): Promise<Team[]> {
+  public async getAllTeams(offset: number, limit: number, sort?: string): Promise<Team[]> {
     try {
-      const allTeams = await this.teamRepository.selectAllTeam(offset, limit, sort);
+      const allTeams = await this.teamRepository.selectAllTeams(offset, limit, sort);
 
       return allTeams;
     } catch (error) {

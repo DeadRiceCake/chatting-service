@@ -31,10 +31,10 @@ export class TeamController {
   @ResponseSchema(Team)
   public async getAll(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
-      const allTeams = await this.teamService.getAllTeam(paging.offset, paging.limit, paging.sort);
+      const allTeams = await this.teamService.getAllTeams(paging.offset, paging.limit, paging.sort);
 
       if (!allTeams.length) {
-        return res.status(RESPONSE_CODE.SUCCESS.NO_CONTENT).send(allTeams);
+        return res.status(RESPONSE_CODE.SUCCESS.NO_CONTENT).send();
       }
 
       return allTeams;
@@ -51,11 +51,11 @@ export class TeamController {
     statusCode: '201',
   })
   @ResponseSchema(CreateTeamResponse)
-  public async create(@Body() team: Team, @Res() res: Response) {
+  public async createTeam(@Body() team: Team, @Res() res: Response) {
     try {
       await this.teamService.createTeam(team.name, team.league);
 
-      return res.status(RESPONSE_CODE.SUCCESS.CREATED).json(new CreateTeamResponse(team));
+      return new CreateTeamResponse(team);
     } catch (error) {
       console.error(error);
       throw error;
