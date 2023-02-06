@@ -29,7 +29,7 @@ export class TeamController {
     },
   })
   @ResponseSchema(Team)
-  public async getAll(@QueryParams() paging: Paging, @Res() res: Response) {
+  public async getAllTeams(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
       const allTeams = await this.teamService.getAllTeams(paging.offset, paging.limit, paging.sort);
 
@@ -51,7 +51,7 @@ export class TeamController {
     statusCode: '201',
   })
   @ResponseSchema(CreateTeamResponse)
-  public async createTeam(@Body() team: Team, @Res() res: Response) {
+  public async createTeam(@Body() team: Team) {
     try {
       await this.teamService.createTeam(team.name, team.league);
 
