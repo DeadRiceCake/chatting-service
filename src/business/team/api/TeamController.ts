@@ -8,6 +8,8 @@ import { Team } from '../model/entity/TeamModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { CreateTeamResponse } from '../response/TeamResponse';
+import { ResponseBody } from '../../../common/model/Response';
+import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 
 @JsonController('/teams')
 @Service()
@@ -22,14 +24,14 @@ export class TeamController {
   @Get('')
   @OpenAPI({
     summary: 'team 목록 조회',
-    statusCode: '200',
+    statusCode: RESPONSE_CODE.SUCCESS.OK,
     responses: {
-      '204': {
-        description: 'No Content',
+      [RESPONSE_CODE.SUCCESS.NO_CONTENT]: {
+        description: RESPONSE_DESCRIPTION.SUCCESS.NO_CONTENT,
       },
     },
   })
-  @ResponseSchema(Team)
+  @ResponseSchema(Team, { isArray: true })
   public async getAllTeams(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
       const allTeams = await this.teamService.getAllTeams(paging);
@@ -49,9 +51,9 @@ export class TeamController {
   @Post('')
   @OpenAPI({
     summary: 'team 추가',
-    statusCode: '201',
+    statusCode: RESPONSE_CODE.SUCCESS.CREATED,
   })
-  @ResponseSchema(CreateTeamResponse)
+  @ResponseSchema(ResponseBody)
   public async createTeam(@Body() createTeamDto: CreateTeamDto) {
     try {
       await this.teamService.createTeam(createTeamDto);
@@ -63,13 +65,13 @@ export class TeamController {
     }
   }
 
-  @HttpCode(RESPONSE_CODE.SUCCESS.CREATED)
+  @HttpCode(RESPONSE_CODE.SUCCESS.OK)
   @Put('/:id')
   @OpenAPI({
     summary: 'team 수정',
-    statusCode: '200',
+    statusCode: RESPONSE_CODE.SUCCESS.OK,
   })
-  @ResponseSchema(CreateTeamResponse)
+  @ResponseSchema(ResponseBody)
   public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
     try {
       const updatedTeam = await this.teamService.updateTeamById(id, updateTeamDto);
