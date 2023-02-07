@@ -14,3 +14,9 @@ export class UpdateTeamResponse extends ResponseBody<object> {
     super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK, { updatedData: updateTeamDto });
   }
 }
+
+export class DeleteTeamResponse extends ResponseBody<unknown> {
+  constructor() {
+    super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK);
+  }
+}

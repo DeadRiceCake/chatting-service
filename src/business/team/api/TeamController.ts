@@ -1,5 +1,5 @@
 import { TeamService } from '../application/TeamService';
-import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body, Put, Param } from 'routing-controllers';
+import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body, Put, Param, Delete } from 'routing-controllers';
 import { Paging } from '../../../common/model/PagingModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -7,7 +7,7 @@ import { Service, Inject } from 'typedi';
 import { Team } from '../model/entity/TeamModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
-import { CreateTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
+import { CreateTeamResponse, DeleteTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 import { ResponseBody } from '../../../common/model/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 import { RESPONSE_STATUS } from '../../../config/Status';
@@ -95,6 +95,24 @@ export class TeamController {
       }
 
       return new UpdateTeamResponse(updateTeamDto);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  @HttpCode(RESPONSE_CODE.SUCCESS.OK)
+  @Delete('/:id')
+  @OpenAPI({
+    summary: 'team 삭제',
+    statusCode: RESPONSE_CODE.SUCCESS.OK,
+  })
+  @ResponseSchema(ResponseBody)
+  public async deleteTeam(@Param('id') id: string) {
+    try {
+      await this.teamService.deleteTeamById(id);
+
+      return new DeleteTeamResponse();
     } catch (error) {
       console.error(error);
       throw error;

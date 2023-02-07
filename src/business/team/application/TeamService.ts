@@ -58,4 +58,15 @@ export class TeamService {
       throw error;
     }
   }
+
+  public async deleteTeamById(id: string): Promise<DMLResult> {
+    try {
+      const deleteTeamByIdResult = await this.teamRepository.deleteTeamById(id);
+
+      return deleteTeamByIdResult;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }

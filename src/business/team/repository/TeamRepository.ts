@@ -67,4 +67,19 @@ export class TeamRepository {
       throw error;
     }
   }
+
+  /**
+   * id를 기준으로 팀을 삭제한다.
+   * @param id 팀 id
+   */
+  public async deleteTeamById(id: string): Promise<DMLResult> {
+    try {
+      const executeQueryResult = await execute<DMLResult>(teamQuery.deleteTeamById, [id]);
+
+      return executeQueryResult;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

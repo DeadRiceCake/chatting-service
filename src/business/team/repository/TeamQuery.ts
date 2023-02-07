@@ -64,4 +64,10 @@ export const teamQuery = {
     WHERE
       id = ?
   `,
+  deleteTeamById: `
+    DELETE FROM
+      tmp.teams
+    WHERE
+      id = ?
+  `,
 };
