@@ -4,7 +4,8 @@ import { Paging } from '../../../common/model/PagingModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service, Inject } from 'typedi';
-import { Team } from '../model/TeamModel';
+import { Team } from '../model/entity/TeamModel';
+import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { CreateTeamResponse } from '../response/TeamResponse';
 
@@ -31,7 +32,7 @@ export class TeamController {
   @ResponseSchema(Team)
   public async getAllTeams(@QueryParams() paging: Paging, @Res() res: Response) {
     try {
-      const allTeams = await this.teamService.getAllTeams(paging.offset, paging.limit, paging.sort);
+      const allTeams = await this.teamService.getAllTeams(paging);
 
       if (!allTeams.length) {
         return res.status(RESPONSE_CODE.SUCCESS.NO_CONTENT).send();
@@ -51,11 +52,11 @@ export class TeamController {
     statusCode: '201',
   })
   @ResponseSchema(CreateTeamResponse)
-  public async createTeam(@Body() team: Team) {
+  public async createTeam(@Body() createTeamDto: CreateTeamDto) {
     try {
-      await this.teamService.createTeam(team.name, team.league);
+      await this.teamService.createTeam(createTeamDto);
 
-      return new CreateTeamResponse(team);
+      return new CreateTeamResponse(createTeamDto);
     } catch (error) {
       console.error(error);
       throw error;
@@ -69,9 +70,9 @@ export class TeamController {
     statusCode: '200',
   })
   @ResponseSchema(CreateTeamResponse)
-  public async updateTeam(@Param('id') id: string, @Body() team: Team) {
+  public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
     try {
-      const updatedTeam = await this.teamService.updateTeamById(id, team.name, team.league, team.isActive);
+      const updatedTeam = await this.teamService.updateTeamById(id, updateTeamDto);
 
       return updatedTeam;
     } catch (error) {
