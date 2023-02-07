@@ -7,7 +7,7 @@ import { Service, Inject } from 'typedi';
 import { Team } from '../model/entity/TeamModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
-import { CreateTeamResponse } from '../response/TeamResponse';
+import { CreateTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 import { ResponseBody } from '../../../common/model/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 
@@ -74,9 +74,9 @@ export class TeamController {
   @ResponseSchema(ResponseBody)
   public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
     try {
-      const updatedTeam = await this.teamService.updateTeamById(id, updateTeamDto);
+      await this.teamService.updateTeamById(id, updateTeamDto);
 
-      return updatedTeam;
+      return new UpdateTeamResponse(updateTeamDto);
     } catch (error) {
       console.error(error);
       throw error;
