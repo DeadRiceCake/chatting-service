@@ -9,8 +9,8 @@ export class CreateTeamResponse extends ResponseBody<CreateTeamDto> {
   }
 }
 
-export class UpdateTeamResponse extends ResponseBody<UpdateTeamDto> {
+export class UpdateTeamResponse extends ResponseBody<object> {
   constructor(updateTeamDto: UpdateTeamDto) {
-    super(RESPONSE_STATUS.SUCCESS.CREATED, RESPONSE_DESCRIPTION.SUCCESS.CREATED, updateTeamDto);
+    super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK, { updatedData: updateTeamDto });
   }
 }

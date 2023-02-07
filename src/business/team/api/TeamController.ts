@@ -10,6 +10,7 @@ import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { CreateTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 import { ResponseBody } from '../../../common/model/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
+import { RESPONSE_STATUS } from '../../../config/Status';
 
 @JsonController('/teams')
 @Service()
@@ -70,11 +71,28 @@ export class TeamController {
   @OpenAPI({
     summary: 'team 수정',
     statusCode: RESPONSE_CODE.SUCCESS.OK,
+    responses: {
+      [RESPONSE_CODE.CLIENT_ERROR.INVALID_ARGUMENT]: {
+        description: RESPONSE_DESCRIPTION.CLIENT_ERROR.INVALID_ARGUMENT,
+      },
+    },
   })
   @ResponseSchema(ResponseBody)
-  public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
+  public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto, @Res() res: Response) {
     try {
-      await this.teamService.updateTeamById(id, updateTeamDto);
+      const updateTeamResult = await this.teamService.updateTeamById(id, updateTeamDto);
+
+      if (!updateTeamResult.affectedRows) {
+        return res
+          .status(RESPONSE_CODE.CLIENT_ERROR.INVALID_ARGUMENT)
+          .json(
+            new ResponseBody(
+              RESPONSE_STATUS.CLIENT_ERROR.INVALID_ARGUMENT,
+              RESPONSE_DESCRIPTION.CLIENT_ERROR.INVALID_ARGUMENT,
+              '해당하는 id의 team이 없습니다.',
+            ),
+          );
+      }
 
       return new UpdateTeamResponse(updateTeamDto);
     } catch (error) {
