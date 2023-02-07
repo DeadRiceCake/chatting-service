@@ -44,4 +44,22 @@ export class TeamRepository {
       throw error;
     }
   }
+
+  /**
+   * id를 기준으로 팀을 수정한다.
+   * @param id 팀 id
+   * @param name 이름
+   * @param league 리그
+   * @param isActive 활성 여부
+   */
+  public async updateTeamById(id: string, name: string, league: string, isActive: boolean): Promise<DMLResult> {
+    try {
+      const executeQueryResult = await execute<DMLResult>(teamQuery.updateTeamById, [name, league, isActive, id]);
+
+      return executeQueryResult;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

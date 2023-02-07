@@ -43,4 +43,15 @@ export class TeamService {
       throw error;
     }
   }
+
+  public async updateTeamById(id: string, name: string, league: string, isActive: boolean): Promise<DMLResult> {
+    try {
+      const updateTeamByIdResult = await this.teamRepository.updateTeamById(id, name, league, isActive);
+
+      return updateTeamByIdResult;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }

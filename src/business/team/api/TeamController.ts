@@ -1,5 +1,5 @@
 import { TeamService } from '../application/TeamService';
-import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body } from 'routing-controllers';
+import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body, Put, Param } from 'routing-controllers';
 import { Paging } from '../../../common/model/PagingModel';
 import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -56,6 +56,24 @@ export class TeamController {
       await this.teamService.createTeam(team.name, team.league);
 
       return new CreateTeamResponse(team);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  @HttpCode(RESPONSE_CODE.SUCCESS.CREATED)
+  @Put('/:id')
+  @OpenAPI({
+    summary: 'team 수정',
+    statusCode: '200',
+  })
+  @ResponseSchema(CreateTeamResponse)
+  public async updateTeam(@Param('id') id: string, @Body() team: Team) {
+    try {
+      const updatedTeam = await this.teamService.updateTeamById(id, team.name, team.league, team.isActive);
+
+      return updatedTeam;
     } catch (error) {
       console.error(error);
       throw error;
