@@ -54,12 +54,22 @@ export class TeamService {
    * @param updateTeamDto 팀 수정 DTO
    */
   public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<DMLResult> {
-    return await this.teamRepository.updateTeamById(
+    const updatedTeamResult = await this.teamRepository.updateTeamById(
       id,
       updateTeamDto.name,
       updateTeamDto.league,
       updateTeamDto.isActive,
     );
+
+    if (!updatedTeamResult.affectedRows) {
+      throw new CustomError(
+        RESPONSE_CODE.CLIENT_ERROR.NOT_FOUND,
+        RESPONSE_STATUS.CLIENT_ERROR.NOT_FOUND,
+        RESPONSE_DESCRIPTION.CLIENT_ERROR.NOT_FOUND,
+      );
+    }
+
+    return updatedTeamResult;
   }
 
   public async deleteTeamById(id: string): Promise<DMLResult> {

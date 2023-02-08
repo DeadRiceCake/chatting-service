@@ -1,7 +1,6 @@
 import { TeamService } from '../application/TeamService';
-import { JsonController, Get, Post, Res, HttpCode, QueryParams, Body, Put, Param, Delete } from 'routing-controllers';
+import { JsonController, Get, Post, HttpCode, QueryParams, Body, Put, Param, Delete } from 'routing-controllers';
 import { Paging } from '../../../common/model/PagingModel';
-import { Response } from 'express';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Service, Inject } from 'typedi';
 import { Team } from '../model/entity/TeamModel';
@@ -10,7 +9,6 @@ import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { CreateTeamResponse, DeleteTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 import { ResponseBody } from '../../../common/response/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
-import { RESPONSE_STATUS } from '../../../config/Status';
 
 @JsonController('/teams')
 @Service()
@@ -64,20 +62,8 @@ export class TeamController {
     },
   })
   @ResponseSchema(ResponseBody)
-  public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto, @Res() res: Response) {
-    const updateTeamResult = await this.teamService.updateTeamById(id, updateTeamDto);
-
-    if (!updateTeamResult.affectedRows) {
-      return res
-        .status(RESPONSE_CODE.CLIENT_ERROR.INVALID_ARGUMENT)
-        .json(
-          new ResponseBody(
-            RESPONSE_STATUS.CLIENT_ERROR.INVALID_ARGUMENT,
-            RESPONSE_DESCRIPTION.CLIENT_ERROR.INVALID_ARGUMENT,
-            '해당하는 id의 team이 없습니다.',
-          ),
-        );
-    }
+  public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
+    await this.teamService.updateTeamById(id, updateTeamDto);
 
     return new UpdateTeamResponse(updateTeamDto);
   }
