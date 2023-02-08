@@ -4,6 +4,10 @@ import { Team } from '../model/entity/TeamModel';
 import { DMLResult } from '../../../common/model/DMLResultModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { Paging } from '../../../common/model/PagingModel';
+import { RESPONSE_CODE } from '../../../config/StatusCode';
+import { RESPONSE_STATUS } from '../../../config/Status';
+import { RESPONSE_DESCRIPTION } from '../../../config/Description';
+import { CustomError } from '../../../common/error/CustomError';
 
 @Service()
 export class TeamService {
@@ -18,11 +22,22 @@ export class TeamService {
    * @param paging 페이징 DTO
    */
   public async getAllTeams(paging: Paging): Promise<Team[]> {
-    if (paging.sort === 'desc') {
-      return await this.teamRepository.selectAllTeamsOrderByIdDESC(paging.offset, paging.limit);
-    } else {
-      return await this.teamRepository.selectAllTeamsOrderByIdASC(paging.offset, paging.limit);
+    const { offset, limit, sort } = paging;
+
+    const allTeams =
+      sort === 'desc'
+        ? await this.teamRepository.selectAllTeamsOrderByIdDESC(offset, limit)
+        : await this.teamRepository.selectAllTeamsOrderByIdASC(offset, limit);
+
+    if (!allTeams.length) {
+      throw new CustomError(
+        RESPONSE_CODE.SUCCESS.NO_CONTENT,
+        RESPONSE_STATUS.SUCCESS.NO_CONTENT,
+        RESPONSE_DESCRIPTION.SUCCESS.NO_CONTENT,
+      );
     }
+
+    return allTeams;
   }
 
   /**

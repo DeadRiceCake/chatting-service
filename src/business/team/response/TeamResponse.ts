@@ -1,4 +1,4 @@
-import { ResponseBody } from '../../../common/model/Response';
+import { ResponseBody } from '../../../common/response/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 import { RESPONSE_STATUS } from '../../../config/Status';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';

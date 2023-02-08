@@ -8,7 +8,7 @@ import { Team } from '../model/entity/TeamModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { CreateTeamResponse, DeleteTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
-import { ResponseBody } from '../../../common/model/Response';
+import { ResponseBody } from '../../../common/response/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 import { RESPONSE_STATUS } from '../../../config/Status';
 
@@ -33,12 +33,8 @@ export class TeamController {
     },
   })
   @ResponseSchema(Team, { isArray: true })
-  public async getAllTeams(@QueryParams() paging: Paging, @Res() res: Response) {
+  public async getAllTeams(@QueryParams() paging: Paging) {
     const allTeams = await this.teamService.getAllTeams(paging);
-
-    if (!allTeams.length) {
-      return res.status(RESPONSE_CODE.SUCCESS.NO_CONTENT).send();
-    }
 
     return allTeams;
   }
