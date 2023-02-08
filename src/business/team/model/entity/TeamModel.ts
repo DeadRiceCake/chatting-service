@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class Team {
   @IsNumber()
@@ -11,6 +11,6 @@ export class Team {
   public league!: string;
 
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   public isActive?: boolean;
 }

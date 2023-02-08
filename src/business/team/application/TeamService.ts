@@ -19,9 +19,11 @@ export class TeamService {
    */
   public async getAllTeams(paging: Paging): Promise<Team[]> {
     try {
-      const allTeams = await this.teamRepository.selectAllTeams(paging);
-
-      return allTeams;
+      if (paging.sort === 'desc') {
+        return await this.teamRepository.selectAllTeamsOrderByIdDESC(paging.offset, paging.limit);
+      } else {
+        return await this.teamRepository.selectAllTeamsOrderByIdASC(paging.offset, paging.limit);
+      }
     } catch (error) {
       console.error(error);
       throw error;
@@ -34,9 +36,7 @@ export class TeamService {
    */
   public async createTeam(createTeamDto: CreateTeamDto): Promise<DMLResult> {
     try {
-      const createTeamResult = await this.teamRepository.insertTeam(createTeamDto);
-
-      return createTeamResult;
+      return await this.teamRepository.insertTeam(createTeamDto.name, createTeamDto.league);
     } catch (error) {
       console.error(error);
       throw error;
@@ -50,9 +50,12 @@ export class TeamService {
    */
   public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<DMLResult> {
     try {
-      const updateTeamByIdResult = await this.teamRepository.updateTeamById(id, updateTeamDto);
-
-      return updateTeamByIdResult;
+      return await this.teamRepository.updateTeamById(
+        id,
+        updateTeamDto.name,
+        updateTeamDto.league,
+        updateTeamDto.isActive,
+      );
     } catch (error) {
       console.error(error);
       throw error;
@@ -61,9 +64,7 @@ export class TeamService {
 
   public async deleteTeamById(id: string): Promise<DMLResult> {
     try {
-      const deleteTeamByIdResult = await this.teamRepository.deleteTeamById(id);
-
-      return deleteTeamByIdResult;
+      return await this.teamRepository.deleteTeamById(id);
     } catch (error) {
       console.error(error);
       throw error;
