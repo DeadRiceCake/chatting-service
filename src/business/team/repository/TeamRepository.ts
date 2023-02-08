@@ -12,16 +12,11 @@ export class TeamRepository {
    * @param limit 페이지 당 데이터 개수
    */
   public async selectAllTeamsOrderByIdASC(offset: number, limit: number): Promise<Team[]> {
-    try {
-      const query = teamQuery.selectTeamListOrderByIdASC;
+    const query = teamQuery.selectTeamListOrderByIdASC;
 
-      const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
+    const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
 
-      return executeQueryResult;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return executeQueryResult;
   }
 
   /**
@@ -30,16 +25,11 @@ export class TeamRepository {
    * @param limit 페이지 당 데이터 개수
    */
   public async selectAllTeamsOrderByIdDESC(offset: number, limit: number): Promise<Team[]> {
-    try {
-      const query = teamQuery.selectTeamListOrderByIdDESC;
+    const query = teamQuery.selectTeamListOrderByIdDESC;
 
-      const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
+    const executeQueryResult = await execute<Team[]>(query, [offset, limit]);
 
-      return executeQueryResult;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return executeQueryResult;
   }
 
   /**
@@ -48,14 +38,9 @@ export class TeamRepository {
    * @param league 생성할 팀 리그
    */
   public async insertTeam(name: string, league: string): Promise<DMLResult> {
-    try {
-      const executeQueryResult = await execute<DMLResult>(teamQuery.insertTeam, [name, league]);
+    const executeQueryResult = await execute<DMLResult>(teamQuery.insertTeam, [name, league]);
 
-      return executeQueryResult;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return executeQueryResult;
   }
 
   /**
@@ -66,14 +51,9 @@ export class TeamRepository {
    * @param isActive 팀 활성화 여부
    */
   public async updateTeamById(id: string, name: string, league: string, isActive: boolean): Promise<DMLResult> {
-    try {
-      const executeQueryResult = await execute<DMLResult>(teamQuery.updateTeamById, [name, league, isActive, id]);
+    const executeQueryResult = await execute<DMLResult>(teamQuery.updateTeamById, [name, league, isActive, id]);
 
-      return executeQueryResult;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return executeQueryResult;
   }
 
   /**
@@ -81,13 +61,8 @@ export class TeamRepository {
    * @param id 팀 id
    */
   public async deleteTeamById(id: string): Promise<DMLResult> {
-    try {
-      const executeQueryResult = await execute<DMLResult>(teamQuery.deleteTeamById, [id]);
+    const executeQueryResult = await execute<DMLResult>(teamQuery.deleteTeamById, [id]);
 
-      return executeQueryResult;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    return executeQueryResult;
   }
 }

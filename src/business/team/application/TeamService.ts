@@ -18,15 +18,10 @@ export class TeamService {
    * @param paging 페이징 DTO
    */
   public async getAllTeams(paging: Paging): Promise<Team[]> {
-    try {
-      if (paging.sort === 'desc') {
-        return await this.teamRepository.selectAllTeamsOrderByIdDESC(paging.offset, paging.limit);
-      } else {
-        return await this.teamRepository.selectAllTeamsOrderByIdASC(paging.offset, paging.limit);
-      }
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (paging.sort === 'desc') {
+      return await this.teamRepository.selectAllTeamsOrderByIdDESC(paging.offset, paging.limit);
+    } else {
+      return await this.teamRepository.selectAllTeamsOrderByIdASC(paging.offset, paging.limit);
     }
   }
 
@@ -35,12 +30,7 @@ export class TeamService {
    * @param createTeamDto 팀 생성 DTO
    */
   public async createTeam(createTeamDto: CreateTeamDto): Promise<DMLResult> {
-    try {
-      return await this.teamRepository.insertTeam(createTeamDto.name, createTeamDto.league);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    return await this.teamRepository.insertTeam(createTeamDto.name, createTeamDto.league);
   }
 
   /**
@@ -49,25 +39,15 @@ export class TeamService {
    * @param updateTeamDto 팀 수정 DTO
    */
   public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<DMLResult> {
-    try {
-      return await this.teamRepository.updateTeamById(
-        id,
-        updateTeamDto.name,
-        updateTeamDto.league,
-        updateTeamDto.isActive,
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    return await this.teamRepository.updateTeamById(
+      id,
+      updateTeamDto.name,
+      updateTeamDto.league,
+      updateTeamDto.isActive,
+    );
   }
 
   public async deleteTeamById(id: string): Promise<DMLResult> {
-    try {
-      return await this.teamRepository.deleteTeamById(id);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    return await this.teamRepository.deleteTeamById(id);
   }
 }
