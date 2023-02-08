@@ -1,7 +1,9 @@
 import { Service, Inject } from 'typedi';
 import { TeamRepository } from '../repository/TeamRepository';
-import { Team } from '../model/TeamModel';
+import { Team } from '../model/entity/TeamModel';
 import { DMLResult } from '../../../common/model/DMLResultModel';
+import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
+import { Paging } from '../../../common/model/PagingModel';
 
 @Service()
 export class TeamService {
@@ -13,15 +15,15 @@ export class TeamService {
 
   /**
    * 팀 목록을 조회한다.
-   * @param offset offset
-   * @param limit limit
-   * @param sort 기본값은 id의 오름차순, desc면 id의 내림차순
+   * @param paging 페이징 DTO
    */
-  public async getAllTeams(offset: number, limit: number, sort?: string): Promise<Team[]> {
+  public async getAllTeams(paging: Paging): Promise<Team[]> {
     try {
-      const allTeams = await this.teamRepository.selectAllTeams(offset, limit, sort);
-
-      return allTeams;
+      if (paging.sort === 'desc') {
+        return await this.teamRepository.selectAllTeamsOrderByIdDESC(paging.offset, paging.limit);
+      } else {
+        return await this.teamRepository.selectAllTeamsOrderByIdASC(paging.offset, paging.limit);
+      }
     } catch (error) {
       console.error(error);
       throw error;
@@ -30,14 +32,39 @@ export class TeamService {
 
   /**
    * 팀을 생성한다
-   * @param name 팀명
-   * @param league 리그 명
+   * @param createTeamDto 팀 생성 DTO
    */
-  public async createTeam(name: string, league: string): Promise<DMLResult> {
+  public async createTeam(createTeamDto: CreateTeamDto): Promise<DMLResult> {
     try {
-      const createTeamResult = await this.teamRepository.insertTeam(name, league);
+      return await this.teamRepository.insertTeam(createTeamDto.name, createTeamDto.league);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
-      return createTeamResult;
+  /**
+   * id를 기준으로 팀을 수정한다.
+   * @param id 팀 id
+   * @param updateTeamDto 팀 수정 DTO
+   */
+  public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<DMLResult> {
+    try {
+      return await this.teamRepository.updateTeamById(
+        id,
+        updateTeamDto.name,
+        updateTeamDto.league,
+        updateTeamDto.isActive,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  public async deleteTeamById(id: string): Promise<DMLResult> {
+    try {
+      return await this.teamRepository.deleteTeamById(id);
     } catch (error) {
       console.error(error);
       throw error;

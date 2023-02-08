@@ -54,4 +54,20 @@ export const teamQuery = {
     VALUE
       (?, ?, 1)
   `,
+  updateTeamById: `
+    UPDATE
+      tmp.teams
+    SET
+      name = ?,
+      league = ?,
+      isActive = ?
+    WHERE
+      id = ?
+  `,
+  deleteTeamById: `
+    DELETE FROM
+      tmp.teams
+    WHERE
+      id = ?
+  `,
 };

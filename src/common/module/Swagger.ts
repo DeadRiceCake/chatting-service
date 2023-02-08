@@ -12,16 +12,14 @@ import { SchemaObject } from 'openapi3-ts';
  * @param app Express Application
  */
 export function useSwagger(app: express.Application) {
-  // Parse class-validator classes into JSON Schema:
   const schemas = validationMetadatasToSchemas({
     refPointerPrefix: '#/components/schemas',
-  }) as SchemaObject;
+  });
 
-  // Parse routing-controllers classes into OPENAPI spec:
   const storage = getMetadataArgsStorage();
   const spec = routingControllersToSpec(storage, routingControllerOptions, {
     components: {
-      schemas,
+      schemas: schemas as SchemaObject,
       securitySchemes: {
         bearerAuth: {
           type: 'http',
@@ -31,8 +29,8 @@ export function useSwagger(app: express.Application) {
       },
     },
     info: {
-      title: 'chatting Server',
-      description: 'chatting Server API',
+      title: 'Chatting Server',
+      description: 'Chatting Server API',
       version: '1.0.0',
     },
   });
