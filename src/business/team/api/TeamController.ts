@@ -6,7 +6,6 @@ import { Service, Inject } from 'typedi';
 import { Team } from '../model/entity/TeamModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
-import { CreateTeamResponse, DeleteTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 import { ResponseBody } from '../../../common/response/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 
@@ -32,9 +31,7 @@ export class TeamController {
   })
   @ResponseSchema(Team, { isArray: true })
   public async getAllTeams(@QueryParams() paging: Paging) {
-    const allTeams = await this.teamService.getAllTeams(paging);
-
-    return allTeams;
+    return await this.teamService.getAllTeams(paging);
   }
 
   @HttpCode(RESPONSE_CODE.SUCCESS.CREATED)
@@ -45,9 +42,7 @@ export class TeamController {
   })
   @ResponseSchema(ResponseBody)
   public async createTeam(@Body() createTeamDto: CreateTeamDto) {
-    await this.teamService.createTeam(createTeamDto);
-
-    return new CreateTeamResponse(createTeamDto);
+    return await this.teamService.createTeam(createTeamDto);
   }
 
   @HttpCode(RESPONSE_CODE.SUCCESS.OK)
@@ -63,9 +58,7 @@ export class TeamController {
   })
   @ResponseSchema(ResponseBody)
   public async updateTeam(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
-    await this.teamService.updateTeamById(id, updateTeamDto);
-
-    return new UpdateTeamResponse(updateTeamDto);
+    return await this.teamService.updateTeamById(id, updateTeamDto);
   }
 
   @HttpCode(RESPONSE_CODE.SUCCESS.OK)
@@ -76,8 +69,6 @@ export class TeamController {
   })
   @ResponseSchema(ResponseBody)
   public async deleteTeam(@Param('id') id: string) {
-    await this.teamService.deleteTeamById(id);
-
-    return new DeleteTeamResponse();
+    return await this.teamService.deleteTeamById(id);
   }
 }

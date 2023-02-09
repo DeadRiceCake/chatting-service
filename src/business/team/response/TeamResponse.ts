@@ -1,17 +1,18 @@
 import { ResponseBody } from '../../../common/response/Response';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 import { RESPONSE_STATUS } from '../../../config/Status';
-import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 
-export class CreateTeamResponse extends ResponseBody<CreateTeamDto> {
-  constructor(createdTeam: CreateTeamDto) {
-    super(RESPONSE_STATUS.SUCCESS.CREATED, RESPONSE_DESCRIPTION.SUCCESS.CREATED, createdTeam);
+export class CreateTeamResponse extends ResponseBody<object> {
+  constructor(name: string, league: string) {
+    super(RESPONSE_STATUS.SUCCESS.CREATED, RESPONSE_DESCRIPTION.SUCCESS.CREATED, { created_team: { name, league } });
   }
 }
 
 export class UpdateTeamResponse extends ResponseBody<object> {
-  constructor(updateTeamDto: UpdateTeamDto) {
-    super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK, { updatedData: updateTeamDto });
+  constructor(id: string, name: string, league: string, isActive: boolean) {
+    super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK, {
+      updated_team: { id, name, league, isActive },
+    });
   }
 }
 

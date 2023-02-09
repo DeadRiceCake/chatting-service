@@ -1,13 +1,13 @@
 import { Service, Inject } from 'typedi';
 import { TeamRepository } from '../repository/TeamRepository';
 import { Team } from '../model/entity/TeamModel';
-import { DMLResult } from '../../../common/model/DMLResultModel';
 import { CreateTeamDto, UpdateTeamDto } from '../model/dto/TeamDto';
 import { Paging } from '../../../common/model/PagingModel';
 import { RESPONSE_CODE } from '../../../config/StatusCode';
 import { RESPONSE_STATUS } from '../../../config/Status';
 import { RESPONSE_DESCRIPTION } from '../../../config/Description';
 import { CustomError } from '../../../common/error/CustomError';
+import { CreateTeamResponse, DeleteTeamResponse, UpdateTeamResponse } from '../response/TeamResponse';
 
 @Service()
 export class TeamService {
@@ -43,9 +43,14 @@ export class TeamService {
   /**
    * 팀을 생성한다
    * @param createTeamDto 팀 생성 DTO
+   * @returns 생성된 팀
    */
-  public async createTeam(createTeamDto: CreateTeamDto): Promise<DMLResult> {
-    return await this.teamRepository.insertTeam(createTeamDto.name, createTeamDto.league);
+  public async createTeam(createTeamDto: CreateTeamDto): Promise<CreateTeamResponse> {
+    const { name, league } = createTeamDto;
+
+    await this.teamRepository.insertTeam(name, league);
+
+    return new CreateTeamResponse(name, league);
   }
 
   /**
@@ -53,13 +58,10 @@ export class TeamService {
    * @param id 팀 id
    * @param updateTeamDto 팀 수정 DTO
    */
-  public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<DMLResult> {
-    const updatedTeamResult = await this.teamRepository.updateTeamById(
-      id,
-      updateTeamDto.name,
-      updateTeamDto.league,
-      updateTeamDto.isActive,
-    );
+  public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<UpdateTeamResponse> {
+    const { name, league, isActive } = updateTeamDto;
+
+    const updatedTeamResult = await this.teamRepository.updateTeamById(id, name, league, isActive);
 
     if (!updatedTeamResult.affectedRows) {
       throw new CustomError(
@@ -69,10 +71,17 @@ export class TeamService {
       );
     }
 
-    return updatedTeamResult;
+    return new UpdateTeamResponse(id, name, league, isActive);
   }
 
-  public async deleteTeamById(id: string): Promise<DMLResult> {
-    return await this.teamRepository.deleteTeamById(id);
+  /**
+   * id를 기준으로 팀을 삭제한다.
+   * @param id 삭제할 팀 id
+   * @returns 삭제 결과
+   */
+  public async deleteTeamById(id: string): Promise<DeleteTeamResponse> {
+    await this.teamRepository.deleteTeamById(id);
+
+    return new DeleteTeamResponse();
   }
 }

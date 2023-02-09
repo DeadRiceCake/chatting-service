@@ -38,9 +38,7 @@ export class TeamRepository {
    * @param league 생성할 팀 리그
    */
   public async insertTeam(name: string, league: string): Promise<DMLResult> {
-    const executeQueryResult = await execute<DMLResult>(teamQuery.insertTeam, [name, league]);
-
-    return executeQueryResult;
+    return await execute<DMLResult>(teamQuery.insertTeam, [name, league]);
   }
 
   /**
