@@ -8,7 +8,6 @@ const app = new TestApp().app;
 describe('[GET] /api/teams', () => {
   it('200: Post 조회에 성공', async () => {
     const response = await request(app).get(`/api/teams?offset=1&limit=2`).expect(200);
-    console.log(response.body);
 
     const { body } = response;
     expect(body.length).toBe(2);
