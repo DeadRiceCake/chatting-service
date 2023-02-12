@@ -21,7 +21,8 @@ export class TeamService {
    * 팀 목록을 조회한다.
    * @param paging 페이징 DTO
    */
-  public async getAllTeams(paging: Paging): Promise<Team[]> {
+  public async getAllTeams(pagingDto: Paging): Promise<Team[]> {
+    const paging = new Paging(pagingDto.offset, pagingDto.limit, pagingDto.sort);
     const { offset, limit, sort } = paging;
 
     const allTeams =

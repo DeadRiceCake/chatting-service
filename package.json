@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/Server.ts",
     "dev": "cross-env NODE_ENV=development nodemon src/Server.ts",
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit",
     "lint": "eslint \"./src/**/*.ts\"",
     "lint:fix": "eslint --fix \"./src/**/*.ts\"",
     "lint-staged": "lint-staged",

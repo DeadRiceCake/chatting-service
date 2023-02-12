@@ -1,9 +1,25 @@
-const sum = (a: number, b: number) => {
-  return a + b;
-};
+import request from 'supertest';
+import { teamSeeds } from '../../seed/TeamSeed';
+import { TestApp } from '../util/TestApp';
+// import app from '../util/TestApp';
 
-describe('sum module', () => {
-  test('adds 1 + 2 to equal 3', () => {
-    expect(sum(1, 2)).toBe(3);
+const app = new TestApp().app;
+
+describe('[GET] /api/teams', () => {
+  it('200: Post 조회에 성공', async () => {
+    const response = await request(app).get(`/api/teams?offset=1&limit=2`).expect(200);
+    console.log(response.body);
+
+    const { body } = response;
+    expect(body.length).toBe(2);
+
+    const teams = [...body];
+
+    teams.forEach((team, i) => {
+      expect(team.id).toBe(teamSeeds[i].id);
+      expect(team.name).toBe(teamSeeds[i].name);
+      expect(team.league).toBe(teamSeeds[i].league);
+      expect(team.isActive).toBe(teamSeeds[i].isActive);
+    });
   });
 });
