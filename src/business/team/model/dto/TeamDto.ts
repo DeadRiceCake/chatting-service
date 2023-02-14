@@ -16,5 +16,5 @@ export class UpdateTeamDto {
   public league!: string;
 
   @IsBoolean()
-  public isActive!: boolean;
+  public is_active!: boolean;
 }

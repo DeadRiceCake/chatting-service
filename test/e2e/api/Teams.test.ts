@@ -58,14 +58,58 @@ describe('[GET] /api/teams', () => {
 
 describe('[POST] /api/teams', () => {
   it('201: Team 생성에 성공', async () => {
-    const name = 'Sung Nam FC';
-    const league = 'K-League';
+    const NAME = 'Sung Nam FC';
+    const LEAGUE = 'K-League';
 
-    const response = await request(app).post('/api/teams').send({ name, league }).expect(201);
+    const response = await request(app).post('/api/teams').send({ name: NAME, league: LEAGUE }).expect(201);
 
     const { body } = response;
 
-    expect(body.additional_info.created_team.name).toBe(name);
-    expect(body.additional_info.created_team.league).toBe(league);
+    expect(body.additional_info.created_team.name).toBe(NAME);
+    expect(body.additional_info.created_team.league).toBe(LEAGUE);
+  });
+});
+
+describe('[PUT] /api/teams/:id', () => {
+  it('200: Team 수정에 성공', async () => {
+    const ID = 1;
+    const NAME = 'Sung Nam FC';
+    const LEAGUE = 'K-League';
+    const IS_ACTIVE = true;
+
+    const response = await request(app)
+      .put(`/api/teams/${ID}`)
+      .send({ name: NAME, league: LEAGUE, is_active: IS_ACTIVE })
+      .expect(200);
+
+    const { body } = response;
+
+    expect(body.additional_info.updated_team.name).toBe(NAME);
+    expect(body.additional_info.updated_team.league).toBe(LEAGUE);
+    expect(body.additional_info.updated_team.is_active).toBe(IS_ACTIVE);
+  });
+
+  it('400: Team id가 존재하지 않아 수정에 실패', async () => {
+    const ID = 100;
+    const NAME = 'Sung Nam FC';
+    const LEAGUE = 'K-League';
+    const IS_ACTIVE = true;
+
+    const response = await request(app)
+      .put(`/api/teams/${ID}`)
+      .send({ name: NAME, league: LEAGUE, is_active: IS_ACTIVE })
+      .expect(400);
+
+    const { body } = response;
+
+    expect(body.additional_info).toBe('존재하지 않는 team id입니다.');
+  });
+});
+
+describe('[DELETE] /api/teams/:id', () => {
+  it('200: Team 삭제에 성공', async () => {
+    const ID = 1;
+
+    await request(app).delete(`/api/teams/${ID}`).expect(200);
   });
 });

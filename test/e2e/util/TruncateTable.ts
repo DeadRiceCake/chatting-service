@@ -6,6 +6,10 @@ interface ITruncateTable {
 }
 
 export class TruncateTeamsTable implements ITruncateTable {
+  /**
+   * 테이브를 초기화한다.
+   * @param table 테이블 이름
+   */
   public async truncateTable(table: string): Promise<void> {
     try {
       await execute(`TRUNCATE TABLE ${table}`, []);
@@ -14,6 +18,9 @@ export class TruncateTeamsTable implements ITruncateTable {
     }
   }
 
+  /**
+   * 테이블에 데이터를 삽입한다.
+   */
   public async insertDatas(): Promise<void> {
     try {
       await execute(
