@@ -16,8 +16,6 @@ export const createDBPool = () => {
       database: DB_CONFIG.DB_DATABASE,
       charset: 'utf8mb4',
     });
-
-    console.debug('MySql Pool이 생성되었습니다');
   } catch (error) {
     console.log('[mysql.connector][init][Error]: ', error);
     throw new Error('풀 생성에 실패하였습니다');
