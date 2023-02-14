@@ -1,15 +1,20 @@
-import { IsPositive, IsNumber, Max, IsString, IsOptional } from 'class-validator';
+import { IsPositive, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class Paging {
   @IsNumber()
   public offset!: number;
 
   @IsNumber()
-  @Max(20)
   @IsPositive()
   public limit!: number;
 
   @IsOptional()
   @IsString()
   public sort?: string;
+
+  constructor(offset: number, limit: number, sort?: string) {
+    this.offset = (offset - 1) * limit;
+    this.limit = limit;
+    if (sort) this.sort = sort;
+  }
 }
