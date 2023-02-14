@@ -4,6 +4,9 @@ import { TeamRepository } from '../../src/business/team/repository/TeamRepositor
 import { teamSeeds } from '../seed/TeamSeed';
 import { createDBPool, release } from '../../src/common/module/Database';
 import { TruncateTeamsTable } from '../e2e/util/TruncateTable';
+import { RESPONSE_STATUS } from '../../src/config/Status';
+import { RESPONSE_DESCRIPTION } from '../../src/config/Description';
+import { CustomError } from '../../src/common/error/CustomError';
 
 describe('TeamService', () => {
   const teamRepository = new TeamRepository();
@@ -44,5 +47,59 @@ describe('TeamService', () => {
       expect(team.league).toBe(teamSeedsOrderByIdDesc[i].league);
       expect(team.isActive).toBe(teamSeedsOrderByIdDesc[i].isActive);
     });
+  });
+
+  it('getAllTeams 조회된 팀이 없을 경우 커스텀 에러를 반환한다', async () => {
+    const paging = { offset: 100, limit: 5 };
+
+    await expect(teamService.getAllTeams(paging)).rejects.toBeInstanceOf(CustomError);
+  });
+
+  it('createTeam 팀을 생성한다', async () => {
+    const createTeamDto = {
+      name: 'Sung Nam FC',
+      league: 'K-League',
+    };
+
+    const createdTeam = await teamService.createTeam(createTeamDto);
+
+    expect(createdTeam.status).toBe(RESPONSE_STATUS.SUCCESS.CREATED);
+    expect(createdTeam.message).toBe(RESPONSE_DESCRIPTION.SUCCESS.CREATED);
+    expect(createdTeam.additional_info).toEqual({
+      created_team: { name: createTeamDto.name, league: createTeamDto.league },
+    });
+  });
+
+  it('updateTeamById id를 기준으로 팀을 수정한다', async () => {
+    const ID = '1';
+    const updateTeamDto = {
+      name: 'Sung Nam FC',
+      league: 'K-League',
+      is_active: true,
+    };
+
+    const updatedTeam = await teamService.updateTeamById(ID, updateTeamDto);
+
+    expect(updatedTeam.status).toBe(RESPONSE_STATUS.SUCCESS.OK);
+    expect(updatedTeam.message).toBe(RESPONSE_DESCRIPTION.SUCCESS.OK);
+    expect(updatedTeam.additional_info).toEqual({
+      updated_team: {
+        id: ID,
+        name: updateTeamDto.name,
+        league: updateTeamDto.league,
+        is_active: updateTeamDto.is_active,
+      },
+    });
+  });
+
+  it('updateTeamById id를 기준으로 팀을 수정할 때, id가 존재하지 않을 경우 커스텀 에러를 반환한다', async () => {
+    const ID = '100';
+    const updateTeamDto = {
+      name: 'Sung Nam FC',
+      league: 'K-League',
+      is_active: true,
+    };
+
+    await expect(teamService.updateTeamById(ID, updateTeamDto)).rejects.toBeInstanceOf(CustomError);
   });
 });
