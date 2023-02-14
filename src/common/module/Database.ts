@@ -44,3 +44,10 @@ export const execute = <T>(query: string, params: string[] | object): Promise<T>
     throw new Error('쿼리문 실행 실패');
   }
 };
+
+/**
+ * 풀 해제
+ */
+export const release = () => {
+  pool.end();
+};
