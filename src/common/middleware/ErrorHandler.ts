@@ -19,7 +19,7 @@ export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
     if (error instanceof BadRequestError) {
       return res.status(RESPONSE_CODE.CLIENT_ERROR.INVALID_ARGUMENT).json(new ValidationErrorResponse(error));
     } else if (error instanceof CustomError) {
-      return res.status(error.httpCode).json(new ResponseBody(error.name, error.message, error.additionalInfo));
+      return res.status(error.httpCode).json(new ResponseBody(error.name, error.message, error.additional_info));
     } else {
       return res.status(RESPONSE_CODE.SERVER_ERROR.INTERNAL).json(new InternalServerErrorResponse(error.message));
     }
