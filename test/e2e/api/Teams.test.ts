@@ -9,7 +9,6 @@ afterAll(async () => {
   const truncateTeamsTable = new TruncateTeamsTable();
   await truncateTeamsTable.truncateTable('tmp.teams');
   await truncateTeamsTable.insertDatas();
-  console.log('테이블 초기화 완료');
 });
 
 describe('[GET] /api/teams', () => {
