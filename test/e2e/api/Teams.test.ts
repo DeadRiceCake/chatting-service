@@ -6,7 +6,7 @@ import { TestApp } from '../util/TestApp';
 const app = new TestApp().app;
 
 describe('[GET] /api/teams', () => {
-  it('200: Post 조회에 성공', async () => {
+  it('200: Team 조회에 성공', async () => {
     const response = await request(app).get(`/api/teams?offset=1&limit=2`).expect(200);
 
     const { body } = response;
