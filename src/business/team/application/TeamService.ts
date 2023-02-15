@@ -60,19 +60,20 @@ export class TeamService {
    * @param updateTeamDto 팀 수정 DTO
    */
   public async updateTeamById(id: string, updateTeamDto: UpdateTeamDto): Promise<UpdateTeamResponse> {
-    const { name, league, isActive } = updateTeamDto;
+    const { name, league, is_active } = updateTeamDto;
 
-    const updatedTeamResult = await this.teamRepository.updateTeamById(id, name, league, isActive);
+    const updatedTeamResult = await this.teamRepository.updateTeamById(id, name, league, is_active);
 
     if (!updatedTeamResult.affectedRows) {
       throw new CustomError(
-        RESPONSE_CODE.CLIENT_ERROR.NOT_FOUND,
-        RESPONSE_STATUS.CLIENT_ERROR.NOT_FOUND,
-        RESPONSE_DESCRIPTION.CLIENT_ERROR.NOT_FOUND,
+        RESPONSE_CODE.CLIENT_ERROR.INVALID_ARGUMENT,
+        RESPONSE_STATUS.CLIENT_ERROR.INVALID_ARGUMENT,
+        RESPONSE_DESCRIPTION.CLIENT_ERROR.INVALID_ARGUMENT,
+        '존재하지 않는 team id입니다.',
       );
     }
 
-    return new UpdateTeamResponse(id, name, league, isActive);
+    return new UpdateTeamResponse(id, name, league, is_active);
   }
 
   /**

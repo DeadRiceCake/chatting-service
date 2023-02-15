@@ -9,9 +9,9 @@ export class CreateTeamResponse extends ResponseBody<object> {
 }
 
 export class UpdateTeamResponse extends ResponseBody<object> {
-  constructor(id: string, name: string, league: string, isActive: boolean) {
+  constructor(id: string, name: string, league: string, is_active: boolean) {
     super(RESPONSE_STATUS.SUCCESS.OK, RESPONSE_DESCRIPTION.SUCCESS.OK, {
-      updated_team: { id, name, league, isActive },
+      updated_team: { id, name, league, is_active },
     });
   }
 }

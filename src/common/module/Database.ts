@@ -16,8 +16,6 @@ export const createDBPool = () => {
       database: DB_CONFIG.DB_DATABASE,
       charset: 'utf8mb4',
     });
-
-    console.debug('MySql Pool이 생성되었습니다');
   } catch (error) {
     console.log('[mysql.connector][init][Error]: ', error);
     throw new Error('풀 생성에 실패하였습니다');
@@ -45,4 +43,11 @@ export const execute = <T>(query: string, params: string[] | object): Promise<T>
     console.log('[mysql.connector][execute][Error]: ', error);
     throw new Error('쿼리문 실행 실패');
   }
+};
+
+/**
+ * 풀 해제
+ */
+export const release = () => {
+  pool.end();
 };
