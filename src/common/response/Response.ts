@@ -8,11 +8,11 @@ export class ResponseBody<T> {
   message!: string;
 
   @IsOptional()
-  additional_info?: T;
+  data?: T;
 
-  constructor(status: string, message: string, additional_info?: T) {
+  constructor(status: string, message: string, data?: T) {
     this.status = status;
     this.message = message;
-    if (additional_info) this.additional_info = additional_info;
+    if (data) this.data = data;
   }
 }

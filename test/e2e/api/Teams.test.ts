@@ -65,8 +65,8 @@ describe('[POST] /api/teams', () => {
 
     const { body } = response;
 
-    expect(body.additional_info.created_team.name).toBe(NAME);
-    expect(body.additional_info.created_team.league).toBe(LEAGUE);
+    expect(body.data.created_team.name).toBe(NAME);
+    expect(body.data.created_team.league).toBe(LEAGUE);
   });
 });
 
@@ -84,9 +84,9 @@ describe('[PUT] /api/teams/:id', () => {
 
     const { body } = response;
 
-    expect(body.additional_info.updated_team.name).toBe(NAME);
-    expect(body.additional_info.updated_team.league).toBe(LEAGUE);
-    expect(body.additional_info.updated_team.is_active).toBe(IS_ACTIVE);
+    expect(body.data.updated_team.name).toBe(NAME);
+    expect(body.data.updated_team.league).toBe(LEAGUE);
+    expect(body.data.updated_team.is_active).toBe(IS_ACTIVE);
   });
 
   it('400: Team id가 존재하지 않아 수정에 실패', async () => {
@@ -102,7 +102,7 @@ describe('[PUT] /api/teams/:id', () => {
 
     const { body } = response;
 
-    expect(body.additional_info).toBe('존재하지 않는 team id입니다.');
+    expect(body.data).toBe('존재하지 않는 team id입니다.');
   });
 });
 

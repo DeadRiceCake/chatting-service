@@ -65,7 +65,7 @@ describe('TeamService', () => {
 
     expect(createdTeam.status).toBe(RESPONSE_STATUS.SUCCESS.CREATED);
     expect(createdTeam.message).toBe(RESPONSE_DESCRIPTION.SUCCESS.CREATED);
-    expect(createdTeam.additional_info).toEqual({
+    expect(createdTeam.data).toEqual({
       created_team: { name: createTeamDto.name, league: createTeamDto.league },
     });
   });
@@ -82,7 +82,7 @@ describe('TeamService', () => {
 
     expect(updatedTeam.status).toBe(RESPONSE_STATUS.SUCCESS.OK);
     expect(updatedTeam.message).toBe(RESPONSE_DESCRIPTION.SUCCESS.OK);
-    expect(updatedTeam.additional_info).toEqual({
+    expect(updatedTeam.data).toEqual({
       updated_team: {
         id: ID,
         name: updateTeamDto.name,
