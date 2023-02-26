@@ -7,7 +7,8 @@ import { routingControllerOptions } from './config/Routing';
 import { createDBPool } from './common/module/Database';
 import morgan from 'morgan';
 import { useSwagger } from './common/module/Swagger';
-// TODO: sentry 적용하기
+import { Server } from 'socket.io';
+import { createServer } from 'http';
 
 export class App {
   public app: express.Application;
@@ -42,13 +43,20 @@ export class App {
    * Express를 시작한다.
    * @param port 포트 번호
    */
-  public async createExpressServer(port: number): Promise<void> {
+  public createExpressServer(port: number): void {
     try {
       useContainer(Container);
       useExpressServer(this.app, routingControllerOptions);
       useSwagger(this.app);
 
-      this.app.listen(port, () => {
+      const httpServer = createServer(this.app);
+      const io = new Server(httpServer, {});
+
+      io.on('connection', (socket) => {
+        console.log(`socket connected ${socket}`);
+      });
+
+      httpServer.listen(port, () => {
         console.log(`서버 가동중... 포트번호: ${port}`);
       });
     } catch (error) {
