@@ -7,8 +7,8 @@ import { routingControllerOptions } from './config/Routing';
 import { createDBPool } from './common/module/Database';
 import morgan from 'morgan';
 import { useSwagger } from './common/module/Swagger';
-import { Server } from 'socket.io';
 import { createServer } from 'http';
+import { SocketServer } from './Socket';
 
 export class App {
   public app: express.Application;
@@ -50,11 +50,9 @@ export class App {
       useSwagger(this.app);
 
       const httpServer = createServer(this.app);
-      const io = new Server(httpServer, {});
 
-      io.on('connection', (socket) => {
-        console.log(`socket connected ${socket}`);
-      });
+      const socketServer = new SocketServer(httpServer);
+      socketServer.createSocketServer();
 
       httpServer.listen(port, () => {
         console.log(`서버 가동중... 포트번호: ${port}`);
