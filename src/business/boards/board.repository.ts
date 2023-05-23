@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, DeleteResult } from 'typeorm';
 import { Board } from './board.entity';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { BoardStatus } from './board.enum';
@@ -28,5 +28,11 @@ export class BoardRepository extends Repository<Board> {
     const foundBoard = await this.findOneBy({ id });
 
     return foundBoard;
+  }
+
+  async deleteBoardById(id: number): Promise<DeleteResult> {
+    const deletedBoard = await this.delete(id);
+
+    return deletedBoard;
   }
 }
