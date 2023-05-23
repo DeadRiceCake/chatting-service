@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
-import { Board } from './board.entity';
 import { BoardRepository } from './board.repository';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 
@@ -8,12 +7,20 @@ import { ResponseBody } from 'src/common/class/responseBody.class';
 export class BoardsService {
   constructor(private boardRepository: BoardRepository) {}
 
-  public createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    return this.boardRepository.createBoard(createBoardDto);
+  public async createBoard(
+    createBoardDto: CreateBoardDto,
+  ): Promise<ResponseBody> {
+    return new ResponseBody(
+      '생성이 완료되었습니다.',
+      await this.boardRepository.createBoard(createBoardDto),
+    );
   }
 
-  public getBoardById(id: number): Promise<Board> {
-    return this.boardRepository.getBoardById(id);
+  public async getBoardById(id: number): Promise<ResponseBody> {
+    return new ResponseBody(
+      '조회에 성공하였습니다.',
+      await this.boardRepository.getBoardById(id),
+    );
   }
 
   public async deleteBoardById(id: number): Promise<ResponseBody> {
