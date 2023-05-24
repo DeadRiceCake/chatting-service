@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { BoardRepository } from './board.repository';
 import { ResponseBody } from 'src/common/class/responseBody.class';
+import { BoardStatus } from './board.enum';
 
 @Injectable()
 export class BoardsService {
@@ -31,5 +32,15 @@ export class BoardsService {
     }
 
     return new ResponseBody(`${id}번 게시글 삭제에 성공했습니다.`);
+  }
+
+  public async updateBoardStatusById(
+    id: number,
+    status: BoardStatus,
+  ): Promise<ResponseBody> {
+    return new ResponseBody(
+      '수정에 성공하였습니다.',
+      await this.boardRepository.update(id, { status }),
+    );
   }
 }
