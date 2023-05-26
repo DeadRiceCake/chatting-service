@@ -8,6 +8,12 @@ import { BoardStatus } from './board.enum';
 export class BoardsService {
   constructor(private boardRepository: BoardRepository) {}
 
+  public async getAllBoards(): Promise<ResponseBody> {
+    return new ResponseBody('조회에 성공하였습니다.', {
+      boards: await this.boardRepository.find(),
+    });
+  }
+
   public async createBoard(
     createBoardDto: CreateBoardDto,
   ): Promise<ResponseBody> {
@@ -38,9 +44,13 @@ export class BoardsService {
     id: number,
     status: BoardStatus,
   ): Promise<ResponseBody> {
+    const foundBoard = await this.boardRepository.getBoardById(id);
+
+    foundBoard.status = status;
+
     return new ResponseBody(
       '수정에 성공하였습니다.',
-      await this.boardRepository.update(id, { status }),
+      await this.boardRepository.save(foundBoard),
     );
   }
 }

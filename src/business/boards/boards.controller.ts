@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
@@ -14,10 +14,16 @@ import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { BoardStatus } from './board.enum';
+import { BoardStatusValidationPipe } from './pipes/boardStatusValidation.pipe';
 
 @Controller('boards')
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
+
+  @Get('/')
+  public getAllBoards(): Promise<ResponseBody> {
+    return this.boardsService.getAllBoards();
+  }
 
   @Post('/')
   @UsePipes(ValidationPipe)
@@ -41,10 +47,10 @@ export class BoardsController {
     return this.boardsService.deleteBoardById(id);
   }
 
-  @Put('/:id')
+  @Patch('/:id/status')
   public updateBoardStatusById(
-    @Param('id') id: number,
-    @Body('status') status: BoardStatus,
+    @Param('id', ParseIntPipe) id: number,
+    @Body(BoardStatusValidationPipe) status: BoardStatus,
   ): Promise<ResponseBody> {
     return this.boardsService.updateBoardStatusById(id, status);
   }
