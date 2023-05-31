@@ -6,7 +6,7 @@ import { databaseConfig } from './config/database.config';
 import { AuthModule } from './business/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(databaseConfig), BoardsModule, AuthModule],
+  imports: [TypeOrmModule.forRoot(databaseConfig), AuthModule, BoardsModule],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

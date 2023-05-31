@@ -6,9 +6,10 @@ import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
 import { DatabaseModule } from 'src/common/library/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board]), DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Board]), DatabaseModule, AuthModule],
   controllers: [BoardsController],
   providers: [...boardProviders, BoardsService, BoardRepository],
 })

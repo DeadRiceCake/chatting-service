@@ -3,23 +3,28 @@ import { CreateBoardDto } from './dto/createBoard.dto';
 import { BoardRepository } from './board.repository';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { BoardStatus } from './board.enum';
+import { JwtPayload } from '../auth/jwt.payload';
 
 @Injectable()
 export class BoardsService {
   constructor(private boardRepository: BoardRepository) {}
 
-  public async getAllBoards(): Promise<ResponseBody> {
+  public async getAllBoards(user: JwtPayload): Promise<ResponseBody> {
     return new ResponseBody('조회에 성공하였습니다.', {
-      boards: await this.boardRepository.find(),
+      boards: await this.boardRepository
+        .createQueryBuilder('board')
+        .where('board.userId = :userId', { userId: user.id })
+        .getMany(),
     });
   }
 
   public async createBoard(
     createBoardDto: CreateBoardDto,
+    user: JwtPayload,
   ): Promise<ResponseBody> {
     return new ResponseBody(
       '생성이 완료되었습니다.',
-      await this.boardRepository.createBoard(createBoardDto),
+      await this.boardRepository.createBoard(createBoardDto, user),
     );
   }
 
