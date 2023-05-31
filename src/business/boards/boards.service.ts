@@ -1,13 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
-import { BoardRepository } from './board.repository';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { BoardStatus } from './board.enum';
 import { JwtPayload } from '../auth/jwt.payload';
+import { REPOSITORY } from 'src/common/constant/repository.constants';
+import { Repository } from 'typeorm';
+import { Board } from './board.entity';
 
 @Injectable()
 export class BoardsService {
-  constructor(private boardRepository: BoardRepository) {}
+  constructor(
+    @Inject(REPOSITORY.BOARD) private boardRepository: Repository<Board>,
+  ) {}
 
   public async getAllBoards(user: JwtPayload): Promise<ResponseBody> {
     return new ResponseBody('조회에 성공하였습니다.', {
@@ -22,16 +26,24 @@ export class BoardsService {
     createBoardDto: CreateBoardDto,
     user: JwtPayload,
   ): Promise<ResponseBody> {
-    return new ResponseBody(
-      '생성이 완료되었습니다.',
-      await this.boardRepository.createBoard(createBoardDto, user),
-    );
+    const { title, description } = createBoardDto;
+
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+      user,
+    });
+
+    await this.boardRepository.save(board);
+
+    return new ResponseBody('생성이 완료되었습니다.', board);
   }
 
   public async getBoardById(id: number): Promise<ResponseBody> {
     return new ResponseBody(
       '조회에 성공하였습니다.',
-      await this.boardRepository.getBoardById(id),
+      await this.boardRepository.findOneBy({ id }),
     );
   }
 
@@ -49,7 +61,7 @@ export class BoardsService {
     id: number,
     status: BoardStatus,
   ): Promise<ResponseBody> {
-    const foundBoard = await this.boardRepository.getBoardById(id);
+    const foundBoard = await this.boardRepository.findOneBy({ id });
 
     foundBoard.status = status;
 

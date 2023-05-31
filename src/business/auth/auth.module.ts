@@ -5,7 +5,6 @@ import { User } from './user.entity';
 import { DatabaseModule } from 'src/common/library/database/database.module';
 import { AuthController } from './auth.controller';
 import { userProviders } from './user.providers';
-import { UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from 'src/config/jwt.config';
 import { PassportModule } from '@nestjs/passport';
@@ -19,7 +18,7 @@ import { JwtStrategy } from './jwt.strategy';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [...userProviders, AuthService, UserRepository, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [...userProviders, AuthService, JwtStrategy],
+  exports: [TypeOrmModule, JwtStrategy, PassportModule],
 })
 export class AuthModule {}

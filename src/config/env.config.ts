@@ -17,7 +17,7 @@ export const DB_CONFIG = {
   DB_PASSWORD: String(process.env.DB_PASSWORD),
   DB_PORT: Number(process.env.DB_PORT),
   DB_DATABASE: String(process.env.DB_DATABASE),
-  DB_SYNCHRONIZE: true,
+  DB_SYNCHRONIZE: ENV === 'production' ? false : true,
 };
 
 export const JWT_CONFIG = {

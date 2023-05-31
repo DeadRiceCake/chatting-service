@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   OneToMany,
@@ -10,7 +9,7 @@ import { Board } from '../boards/board.entity';
 
 @Entity()
 @Unique(['userName'])
-export class User extends BaseEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 

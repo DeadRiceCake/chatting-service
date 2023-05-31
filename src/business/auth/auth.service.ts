@@ -1,27 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import {
+  Injectable,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { AuthCredientialDto } from './dto/authCredential.dto';
 import * as bcrypt from 'bcryptjs';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { Repository } from 'typeorm';
+import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
   public async signUp(
     authCredientialDto: AuthCredientialDto,
   ): Promise<ResponseBody> {
+    const { userName, password } = authCredientialDto;
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(authCredientialDto.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    authCredientialDto.password = hashedPassword;
+    const user = this.userRepository.create({
+      userName,
+      password: hashedPassword,
+    });
 
-    await this.userRepository.createUser(authCredientialDto);
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      if (error.code === ERROR_CODE.DB.DUPLICATE_ENTRY) {
+        throw new ConflictException('Username already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
 
     return new ResponseBody('회원가입 성공');
   }
