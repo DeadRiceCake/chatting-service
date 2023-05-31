@@ -6,10 +6,20 @@ import { DatabaseModule } from 'src/common/library/database/database.module';
 import { AuthController } from './auth.controller';
 import { userProviders } from './user.providers';
 import { UserRepository } from './user.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConfig } from 'src/config/jwt.config';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), DatabaseModule],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register(jwtConfig),
+    TypeOrmModule.forFeature([User]),
+    DatabaseModule,
+  ],
   controllers: [AuthController],
-  providers: [...userProviders, AuthService, UserRepository],
+  providers: [...userProviders, AuthService, UserRepository, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

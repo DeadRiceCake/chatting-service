@@ -19,3 +19,7 @@ export const DB_CONFIG = {
   DB_DATABASE: String(process.env.DB_DATABASE),
   DB_SYNCHRONIZE: Boolean(process.env.DB_SYNCHRONIZE),
 };
+
+export const JWT_CONFIG = {
+  JWT_SECRET: String(process.env.JWT_SECRET),
+};
