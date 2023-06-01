@@ -10,8 +10,8 @@ import { Board } from '../boards/board.entity';
 @Entity()
 @Unique(['userName'])
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   userName: string;
