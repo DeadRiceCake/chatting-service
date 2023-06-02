@@ -5,10 +5,12 @@ import { DataSource } from 'typeorm';
 import { databaseConfig } from './config/database.config';
 import { AuthModule } from './business/auth/auth.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
 
 @Module({
   imports: [TypeOrmModule.forRoot(databaseConfig), AuthModule, BoardsModule],
-  providers: [Logger],
+  providers: [Logger, { provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}

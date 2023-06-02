@@ -57,7 +57,7 @@ export class BoardsService {
     });
 
     if (!deleteBoardResult.affected) {
-      throw new NotFoundException(`${id}번 게시글이 존재하지 않습니다.`);
+      throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
     return new ResponseBody(`${id}번 게시글 삭제에 성공했습니다.`);

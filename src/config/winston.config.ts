@@ -1,6 +1,6 @@
 import { utilities, WinstonModuleOptions } from 'nest-winston';
 import winstonDaily from 'winston-daily-rotate-file';
-import * as winston from 'winston';
+import { format, transports } from 'winston';
 
 const logDir = __dirname + '/../logs';
 
@@ -15,17 +15,15 @@ const dailyOptions = (level: string) => {
 };
 
 export const winstonConfig: WinstonModuleOptions = {
-  transports: [
-    new winston.transports.Console({
-      level: 'silly',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        utilities.format.nestLike('chatting-server', {
-          colors: true,
-        }),
-      ),
+  format: format.combine(
+    format.timestamp(),
+    format.ms(),
+    utilities.format.nestLike('chatting-server', {
+      colors: true,
     }),
-
+  ),
+  transports: [
+    new transports.Console(),
     new winstonDaily(dailyOptions('info')),
     new winstonDaily(dailyOptions('warn')),
     new winstonDaily(dailyOptions('error')),
