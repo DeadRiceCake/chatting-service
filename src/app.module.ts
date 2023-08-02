@@ -7,7 +7,7 @@ import { AuthModule } from './business/auth/auth.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
-import { GatewayModule } from './gateway/gateway.module';
+import { GatewayModule } from './chat/chat.module';
 
 @Module({
   imports: [
