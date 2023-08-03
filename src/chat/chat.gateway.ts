@@ -10,12 +10,15 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ChatRoomService } from './chatRoom.service';
 import { CreateChatRoomOption } from './chat.interface';
+import { UseFilters } from '@nestjs/common';
+import { WebSocketExceptionsFilter } from 'src/filter/ws-exception.filter';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
+@UseFilters(WebSocketExceptionsFilter)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private chatRoomService: ChatRoomService) {}
 
