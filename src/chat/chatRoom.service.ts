@@ -1,7 +1,8 @@
 import { Socket } from 'socket.io';
 import { ChatRoom } from './chat.interface';
 import { randomUUID } from 'crypto';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class ChatRoomService {
@@ -40,7 +41,7 @@ export class ChatRoomService {
 
   public getChatRoom(roomId: string) {
     const chatRoom = this.#chatRooms.find((room) => room.roomId === roomId);
-    if (!chatRoom) throw new BadRequestException('존재하지 않는 채팅방입니다.');
+    if (!chatRoom) throw new WsException('존재하지 않는 채팅방입니다.');
 
     return chatRoom;
   }
