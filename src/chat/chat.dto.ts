@@ -1,4 +1,4 @@
-import { ChatRoom } from './chat.type';
+import { ChatRoom } from './chat.interface';
 
 export class chatRoomDTO implements ChatRoom {
   roomId: string;

@@ -3,3 +3,5 @@ export interface ChatRoom {
   adminId: string | null;
   name: string;
 }
+
+export type CreateChatRoomOption = Pick<ChatRoom, 'name'>;

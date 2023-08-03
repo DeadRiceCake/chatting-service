@@ -41,10 +41,12 @@ export class BoardsService {
   }
 
   public async getBoardById(id: number): Promise<ResponseBody> {
-    return new ResponseBody(
-      '조회에 성공하였습니다.',
-      await this.boardRepository.findOneBy({ id }),
-    );
+    const board = await this.boardRepository.findOneBy({ id });
+    if (!board) {
+      throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
+    }
+
+    return new ResponseBody('조회에 성공하였습니다.', board);
   }
 
   public async deleteBoardById(
@@ -68,6 +70,9 @@ export class BoardsService {
     status: BoardStatus,
   ): Promise<ResponseBody> {
     const foundBoard = await this.boardRepository.findOneBy({ id });
+    if (!foundBoard) {
+      throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
+    }
 
     foundBoard.status = status;
 

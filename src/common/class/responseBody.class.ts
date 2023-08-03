@@ -1,6 +1,6 @@
 export class ResponseBody {
   message: string;
-  data: object;
+  data?: object;
 
   constructor(message: string, data?: object) {
     this.message = message;
