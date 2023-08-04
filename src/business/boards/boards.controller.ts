@@ -19,7 +19,9 @@ import { BoardStatusValidationPipe } from './pipes/boardStatusValidation.pipe';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/getUser.decorator';
 import { JwtPayload } from '../auth/jwt.payload';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('boards')
 @Controller('boards')
 @UseGuards(AuthGuard())
 export class BoardsController {

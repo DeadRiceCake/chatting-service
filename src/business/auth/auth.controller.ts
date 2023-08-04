@@ -11,12 +11,18 @@ import { ResponseBody } from 'src/common/class/responseBody.class';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './getUser.decorator';
 import { JwtPayload } from './jwt.payload';
+import { ApiTags, ApiCreatedResponse } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @ApiCreatedResponse({
+    description: '회원가입 성공',
+    type: ResponseBody,
+  })
   public signUp(
     @Body(ValidationPipe) authCredientialDto: AuthCredientialDto,
   ): Promise<ResponseBody> {
