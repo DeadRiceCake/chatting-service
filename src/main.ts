@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston.config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { SocketIoAdapter } from './chat/socket-io.adapter';
 import { swaggerConfig } from './config/swagger.config';
@@ -18,6 +18,7 @@ async function bootstrap() {
 
   app.useWebSocketAdapter(new SocketIoAdapter(app));
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe());
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);

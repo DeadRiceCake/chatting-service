@@ -1,7 +1,7 @@
-export interface ChatRoom {
-  roomId: string;
-  adminId: string | null;
-  name: string;
+export interface Chat {
+  chatId: string;
+  senderId: string;
+  message: string;
+  isRead: boolean;
+  createdAt: Date;
 }
-
-export type CreateChatRoomOption = Pick<ChatRoom, 'name'>;

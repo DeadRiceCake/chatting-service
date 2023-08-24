@@ -9,15 +9,16 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatRoomService } from './chatRoom.service';
-import { CreateChatRoomOption } from './chat.interface';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionsFilter } from 'src/filter/ws-exception.filter';
+import { CreateChatRoomRequest } from './chat.request';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
+@UsePipes(new ValidationPipe())
 @UseFilters(WebSocketExceptionsFilter)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private chatRoomService: ChatRoomService) {}
@@ -36,23 +37,33 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('sendMessage')
   sendMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() body: { message: string },
+    @MessageBody() body: { roomId: string; message: string },
   ) {
-    const { roomId } = client.data;
+    console.log('sendMessage', body.roomId, client.rooms);
 
-    client.to(roomId).emit('receiveMessage', { clientId: client.id, ...body });
+    client.to(body.roomId).emit('receiveMessage', body);
   }
 
   @SubscribeMessage('createChatRoom')
   createChatRoom(
     @ConnectedSocket() client: Socket,
-    @MessageBody() body: CreateChatRoomOption,
+    @MessageBody() body: CreateChatRoomRequest,
   ) {
-    this.chatRoomService.createChatRoom(client, body.name);
+    this.chatRoomService.createChatRoom(client, body.roomName);
   }
 
   @SubscribeMessage('joinChatRoom')
-  joinChatRoom(@ConnectedSocket() client: Socket, roomId: string) {
-    this.chatRoomService.joinChatRoom(client, roomId);
+  joinChatRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() roomId: string,
+  ) {
+    // this.chatRoomService.joinChatRoom(client, roomId);
+    client.join(roomId);
+    console.log('joined', client.rooms);
+  }
+
+  @SubscribeMessage('getChatRooms')
+  getChatRooms(client: Socket) {
+    client.emit('getChatRoomList', this.chatRoomService.getChatRooms());
   }
 }

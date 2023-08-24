@@ -1,25 +1,18 @@
 import { Socket } from 'socket.io';
-import { ChatRoom } from './chat.interface';
-import { randomUUID } from 'crypto';
+import { ChatRoom } from './chatRoom.class';
 import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class ChatRoomService {
-  #chatRooms: ChatRoom[] = [];
+  private chatRooms: ChatRoom[] = [];
 
   public createChatRoom(client: Socket, roomName: string) {
-    const roomId = randomUUID();
-    const chatRoom: ChatRoom = {
-      roomId,
-      adminId: client.id,
-      name: roomName,
-    };
+    const chatRoom = new ChatRoom(client.id, roomName);
 
-    this.#chatRooms.push(chatRoom);
-    console.log(this.#chatRooms);
-    client.join(roomId);
-    client.emit('onChatRoomCreated', chatRoom);
+    this.chatRooms.push(chatRoom);
+    client.join(chatRoom.roomId);
+    console.log('created', client.rooms);
   }
 
   public joinChatRoom(client: Socket, roomId: string) {
@@ -28,6 +21,7 @@ export class ChatRoomService {
     const chatRoom = this.getChatRoom(roomId);
 
     client.to(roomId).emit('onJoinChatRoom', chatRoom);
+    console.log('joined', client.rooms);
   }
 
   public leaveChatRoom(client: Socket) {
@@ -40,17 +34,17 @@ export class ChatRoomService {
   }
 
   public getChatRoom(roomId: string) {
-    const chatRoom = this.#chatRooms.find((room) => room.roomId === roomId);
+    const chatRoom = this.chatRooms.find((room) => room.roomId === roomId);
     if (!chatRoom) throw new WsException('존재하지 않는 채팅방입니다.');
 
     return chatRoom;
   }
 
   public getChatRooms() {
-    return this.#chatRooms;
+    return this.chatRooms;
   }
 
   public deleteChatRoom(roomId: string) {
-    this.#chatRooms = this.#chatRooms.filter((room) => room.roomId !== roomId);
+    this.chatRooms = this.chatRooms.filter((room) => room.roomId !== roomId);
   }
 }
