@@ -9,3 +9,11 @@ export class JoinChatRoomRequest {
   @IsUUID(4)
   roomId: string;
 }
+
+export class SendMessageRequest {
+  @IsUUID(4)
+  roomId: string;
+
+  @IsString()
+  message: string;
+}

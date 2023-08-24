@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Chat } from './chat.interface';
+import { Chat } from './chat.class';
 
 export class ChatRoom {
   roomId: string;

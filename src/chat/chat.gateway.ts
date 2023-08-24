@@ -11,7 +11,11 @@ import { Server, Socket } from 'socket.io';
 import { ChatRoomService } from './chatRoom.service';
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionsFilter } from 'src/filter/ws-exception.filter';
-import { CreateChatRoomRequest, JoinChatRoomRequest } from './chat.request';
+import {
+  CreateChatRoomRequest,
+  JoinChatRoomRequest,
+  SendMessageRequest,
+} from './chat.request';
 
 @WebSocketGateway({
   cors: {
@@ -34,16 +38,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('disconnected', client.id);
   }
 
-  @SubscribeMessage('sendMessage')
-  sendMessage(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() body: { roomId: string; message: string },
-  ) {
-    console.log('sendMessage', body.roomId, client.rooms);
-
-    client.to(body.roomId).emit('receiveMessage', body);
-  }
-
   @SubscribeMessage('createChatRoom')
   createChatRoom(
     @ConnectedSocket() client: Socket,
@@ -58,6 +52,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() body: JoinChatRoomRequest,
   ) {
     this.chatRoomService.joinChatRoom(client, body.roomId);
+  }
+
+  @SubscribeMessage('sendMessage')
+  sendMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() body: SendMessageRequest,
+  ) {
+    this.chatRoomService.sendMessage(client, body);
   }
 
   @SubscribeMessage('getChatRooms')
