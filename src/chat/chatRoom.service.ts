@@ -14,7 +14,6 @@ export class ChatRoomService {
 
     this.chatRooms.push(chatRoom);
     client.join(chatRoom.roomId);
-    console.log('created', client.rooms);
   }
 
   public joinChatRoom(client: Socket, roomId: string) {
@@ -22,7 +21,6 @@ export class ChatRoomService {
 
     client.join(roomId);
     client.to(roomId).emit('onJoinChatRoom', chatRoom);
-    console.log('joined', client.rooms);
   }
 
   public sendMessage(client: Socket, body: SendMessageRequest) {
@@ -34,7 +32,6 @@ export class ChatRoomService {
     chatRoom.addChat(chat);
 
     client.to(body.roomId).emit('receiveMessage', chat);
-    console.log('message', this.chatRooms[0].chats);
   }
 
   public leaveChatRoom(client: Socket) {
