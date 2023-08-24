@@ -16,10 +16,9 @@ export class ChatRoomService {
   }
 
   public joinChatRoom(client: Socket, roomId: string) {
-    client.join(roomId);
-
     const chatRoom = this.getChatRoom(roomId);
 
+    client.join(roomId);
     client.to(roomId).emit('onJoinChatRoom', chatRoom);
     console.log('joined', client.rooms);
   }
