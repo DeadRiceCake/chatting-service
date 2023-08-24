@@ -11,7 +11,7 @@ import { Server, Socket } from 'socket.io';
 import { ChatRoomService } from './chatRoom.service';
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionsFilter } from 'src/filter/ws-exception.filter';
-import { CreateChatRoomRequest } from './chat.request';
+import { CreateChatRoomRequest, JoinChatRoomRequest } from './chat.request';
 
 @WebSocketGateway({
   cors: {
@@ -55,11 +55,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('joinChatRoom')
   joinChatRoom(
     @ConnectedSocket() client: Socket,
-    @MessageBody() roomId: string,
+    @MessageBody() body: JoinChatRoomRequest,
   ) {
-    // this.chatRoomService.joinChatRoom(client, roomId);
-    client.join(roomId);
-    console.log('joined', client.rooms);
+    this.chatRoomService.joinChatRoom(client, body.roomId);
   }
 
   @SubscribeMessage('getChatRooms')
