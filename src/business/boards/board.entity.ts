@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { BoardStatus } from './board.enum';
+import { BoardStatus } from './board.type';
 import { User } from '../auth/user.entity';
 
 @Entity()

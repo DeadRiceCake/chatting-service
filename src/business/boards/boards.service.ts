@@ -1,24 +1,17 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { ResponseBody } from 'src/common/class/responseBody.class';
-import { BoardStatus } from './board.enum';
+import { BoardStatus } from './board.type';
 import { JwtPayload } from '../auth/jwt.payload';
-import { REPOSITORY } from 'src/common/constant/repository.constants';
-import { Repository } from 'typeorm';
-import { Board } from './board.entity';
+import { BoardRepository } from './board.repository';
 
 @Injectable()
 export class BoardsService {
-  constructor(
-    @Inject(REPOSITORY.BOARD) private boardRepository: Repository<Board>,
-  ) {}
+  constructor(private boardRepository: BoardRepository) {}
 
   public async getAllBoards(user: JwtPayload): Promise<ResponseBody> {
     return new ResponseBody('조회에 성공하였습니다.', {
-      boards: await this.boardRepository
-        .createQueryBuilder('board')
-        .where('board.userId = :userId', { userId: user.id })
-        .getMany(),
+      boards: await this.boardRepository.getAllBoards(user.id),
     });
   }
 
@@ -28,20 +21,18 @@ export class BoardsService {
   ): Promise<ResponseBody> {
     const { title, description } = createBoardDto;
 
-    const board = this.boardRepository.create({
+    const board = await this.boardRepository.createBoard(
       title,
       description,
-      status: BoardStatus.PUBLIC,
-      user,
-    });
-
-    await this.boardRepository.save(board);
+      user.id,
+    );
 
     return new ResponseBody('생성이 완료되었습니다.', board);
   }
 
   public async getBoardById(id: number): Promise<ResponseBody> {
-    const board = await this.boardRepository.findOneBy({ id });
+    const board = await this.boardRepository.getBoardById(id);
+
     if (!board) {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
@@ -53,10 +44,10 @@ export class BoardsService {
     id: number,
     user: JwtPayload,
   ): Promise<ResponseBody> {
-    const deleteBoardResult = await this.boardRepository.delete({
+    const deleteBoardResult = await this.boardRepository.deleteBoardById(
       id,
-      user,
-    });
+      user.id,
+    );
 
     if (!deleteBoardResult.affected) {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
@@ -69,16 +60,16 @@ export class BoardsService {
     id: number,
     status: BoardStatus,
   ): Promise<ResponseBody> {
-    const foundBoard = await this.boardRepository.findOneBy({ id });
+    const foundBoard = await this.boardRepository.getBoardById(id);
+
     if (!foundBoard) {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
     foundBoard.status = status;
 
-    return new ResponseBody(
-      '수정에 성공하였습니다.',
-      await this.boardRepository.save(foundBoard),
-    );
+    const updateResult = await this.boardRepository.save(foundBoard);
+
+    return new ResponseBody('수정에 성공하였습니다.', updateResult);
   }
 }
