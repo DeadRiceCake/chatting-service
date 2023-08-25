@@ -8,16 +8,13 @@ import * as bcrypt from 'bcryptjs';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
