@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
 import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 import { UserRepository } from './user.repository';
+import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 
 @Injectable()
 export class AuthService {
@@ -57,5 +58,9 @@ export class AuthService {
     } else {
       return new ResponseBody('로그인 실패');
     }
+  }
+
+  public async sendAuthSMS(sendAuthSMSRequest: SendAuthSMSRequest) {
+    const { mobileNumber } = sendAuthSMSRequest;
   }
 }

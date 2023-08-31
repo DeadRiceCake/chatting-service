@@ -12,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './getUser.decorator';
 import { JwtPayload } from './jwt.payload';
 import { ApiTags, ApiCreatedResponse } from '@nestjs/swagger';
+import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -40,5 +41,12 @@ export class AuthController {
   @UseGuards(AuthGuard())
   public test(@GetUser() user: JwtPayload) {
     console.log(user);
+  }
+
+  @Post('/sms')
+  public sendAuthSMS(
+    @Body(ValidationPipe) sendAuthSMSRequest: SendAuthSMSRequest,
+  ) {
+    return this.authService.sendAuthSMS(sendAuthSMSRequest);
   }
 }
