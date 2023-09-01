@@ -2,35 +2,38 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import crypto from 'crypto';
 import { ncpConfig } from 'src/config/ncp.config';
+import { MessageBody, SendSMSBody } from './SMS.type';
 
 @Injectable()
 export class SMSService {
   private readonly baseUrl = ncpConfig.sms.BASE_URL;
   private readonly serviceId = ncpConfig.sms.SERVICE_ID;
+  private readonly accessKey = ncpConfig.ACCESS_KEY;
   private readonly fromMobileNumber = ncpConfig.sms.FROM_MOBILE_NUMBER;
 
-  public async sendSMS(content: string, toMobileNumbers: { to: string }[]) {
+  public async sendSMS(content: string, toMobileNumbers: MessageBody[]) {
     const uri = `/sms/v2/services/${this.serviceId}/messages`;
     const timestamp = new Date().getTime().toString();
     const signature = this.makeSignature('POST', uri, timestamp);
-    const requestBody = {
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-ncp-apigw-timestamp': timestamp,
+      'x-ncp-iam-access-key': this.accessKey,
+      'x-ncp-apigw-signature-v2': signature,
+    };
+
+    const requestBody: SendSMSBody = {
       type: 'SMS',
       from: this.fromMobileNumber,
-      content: '노드맨의 개인 프로젝트 회원가입 인증번호 [6974]',
+      content,
       messages: toMobileNumbers,
     };
 
     const sendSMSResponse = await axios.post(
       `${this.baseUrl}${uri}`,
       requestBody,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-ncp-apigw-timestamp': timestamp,
-          'x-ncp-iam-access-key': 'DhFeZtuaVv6dLo8YpHne',
-          'x-ncp-apigw-signature-v2': signature,
-        },
-      },
+      { headers },
     );
 
     return sendSMSResponse.data;
