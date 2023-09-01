@@ -1,8 +1,19 @@
-export default () => ({
-  ACCESS_KEY: String(process.env.NCP_ACCESS_KEY),
-  SECRET_KEY: String(process.env.NCP_SECRET_KEY),
+export interface NCPConfig {
+  accessKey: string;
+  secretKey: string;
+  sms: {
+    serviceId: string;
+    fromMobileNumber: string;
+    baseUrl: string;
+  };
+}
 
-  SMS_SERVICE_ID: String(process.env.NCP_SMS_SERVICE_ID),
-  SMS_FROM_MOBILE_NUMBER: String(process.env.NCP_SMS_FROM_MOBILE_NUMBER),
-  SMS_BASE_URL: 'https://sens.apigw.ntruss.com',
+export default (): NCPConfig => ({
+  accessKey: String(process.env.NCP_ACCESS_KEY),
+  secretKey: String(process.env.NCP_SECRET_KEY),
+  sms: {
+    serviceId: String(process.env.NCP_SMS_SERVICE_ID),
+    fromMobileNumber: String(process.env.NCP_SMS_FROM_MOBILE_NUMBER),
+    baseUrl: 'https://sens.apigw.ntruss.com',
+  },
 });

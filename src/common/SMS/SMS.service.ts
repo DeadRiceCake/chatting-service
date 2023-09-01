@@ -3,31 +3,30 @@ import axios from 'axios';
 import crypto from 'crypto';
 import { MessageBody, SendSMSBody } from './SMS.type';
 import { ConfigService } from '@nestjs/config';
+import { NCPConfig } from 'src/config/ncp.config';
 
 @Injectable()
 export class SMSService {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService<NCPConfig>) {}
 
-  private readonly baseUrl = this.configService.get<string>(
-    'SMS_BASE_URL',
-    'not set',
-  );
-  private readonly serviceId = this.configService.get<string>(
-    'SMS_SERVICE_ID',
-    'not set',
-  );
-  private readonly accessKey = this.configService.get<string>(
-    'ACCESS_KEY',
-    'not set',
-  );
-  private readonly secretKey = this.configService.get<string>(
-    'SECRET_KEY',
-    'not set',
-  );
+  private readonly baseUrl = this.configService.get<string>('sms.baseUrl', {
+    infer: true,
+  }) as string;
+  private readonly serviceId = this.configService.get<string>('sms.serviceId', {
+    infer: true,
+  }) as string;
+  private readonly accessKey = this.configService.get<string>('accessKey', {
+    infer: true,
+  }) as string;
+  private readonly secretKey = this.configService.get<string>('secretKey', {
+    infer: true,
+  }) as string;
   private readonly fromMobileNumber = this.configService.get<string>(
-    'SMS_FROM_MOBILE_NUMBER',
-    '01012345678',
-  );
+    'sms.fromMobileNumber',
+    {
+      infer: true,
+    },
+  ) as string;
 
   public async sendSMS(content: string, toMobileNumbers: MessageBody[]) {
     const uri = `/sms/v2/services/${this.serviceId}/messages`;
