@@ -1,23 +1,28 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Board } from '../boards/board.entity';
 
 @Entity()
-@Unique(['userName'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  userName: string;
+  role: string;
 
   @Column()
-  password: string;
+  nickname: string;
+
+  @Column()
+  mobile_number: string;
+
+  @Column()
+  is_activated: boolean;
+
+  @Column()
+  rating_score: number;
+
+  @Column()
+  created_at: Date;
 
   @OneToMany(() => Board, (board) => board.user, { eager: true })
   boards: Board[];

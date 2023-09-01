@@ -19,23 +19,23 @@ import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/signup')
-  @ApiCreatedResponse({
-    description: '회원가입 성공',
-    type: ResponseBody,
-  })
-  public signUp(
-    @Body(ValidationPipe) authCredientialDto: AuthCredientialDto,
-  ): Promise<ResponseBody> {
-    return this.authService.signUp(authCredientialDto);
-  }
+  // @Post('/signup')
+  // @ApiCreatedResponse({
+  //   description: '회원가입 성공',
+  //   type: ResponseBody,
+  // })
+  // public signUp(
+  //   @Body(ValidationPipe) authCredientialDto: AuthCredientialDto,
+  // ): Promise<ResponseBody> {
+  //   return this.authService.signUp(authCredientialDto);
+  // }
 
-  @Post('/signin')
-  public signIn(
-    @Body(ValidationPipe) authCredientialDto: AuthCredientialDto,
-  ): Promise<ResponseBody> {
-    return this.authService.signIn(authCredientialDto);
-  }
+  // @Post('/signin')
+  // public signIn(
+  //   @Body(ValidationPipe) authCredientialDto: AuthCredientialDto,
+  // ): Promise<ResponseBody> {
+  //   return this.authService.signIn(authCredientialDto);
+  // }
 
   @Post('/test')
   @UseGuards(AuthGuard())

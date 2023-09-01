@@ -11,56 +11,62 @@ import { JwtPayload } from './jwt.payload';
 import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 import { UserRepository } from './user.repository';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
+import { SMSService } from 'src/common/SMS/SMS.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private smsService: SMSService,
   ) {}
 
-  public async signUp(
-    authCredientialDto: AuthCredientialDto,
-  ): Promise<ResponseBody> {
-    const { userName, password } = authCredientialDto;
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+  // public async signUp(
+  //   authCredientialDto: AuthCredientialDto,
+  // ): Promise<ResponseBody> {
+  //   const { userName, password } = authCredientialDto;
+  //   const salt = await bcrypt.genSalt();
+  //   const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = this.userRepository.create({
-      userName,
-      password: hashedPassword,
-    });
+  //   const user = this.userRepository.create({
+  //     userName,
+  //     password: hashedPassword,
+  //   });
 
-    try {
-      await this.userRepository.save(user);
-    } catch (error) {
-      if (error.code === ERROR_CODE.DB.DUPLICATE_ENTRY) {
-        throw new ConflictException('Username already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+  //   try {
+  //     await this.userRepository.save(user);
+  //   } catch (error) {
+  //     if (error.code === ERROR_CODE.DB.DUPLICATE_ENTRY) {
+  //       throw new ConflictException('Username already exists');
+  //     } else {
+  //       throw new InternalServerErrorException();
+  //     }
+  //   }
 
-    return new ResponseBody('회원가입 성공');
-  }
+  //   return new ResponseBody('회원가입 성공');
+  // }
 
-  public async signIn(
-    authCredientialDto: AuthCredientialDto,
-  ): Promise<ResponseBody> {
-    const { userName, password } = authCredientialDto;
-    const user = await this.userRepository.findOneBy({ userName });
+  // public async signIn(
+  //   authCredientialDto: AuthCredientialDto,
+  // ): Promise<ResponseBody> {
+  //   const { userName, password } = authCredientialDto;
+  //   const user = await this.userRepository.findOneBy({ userName });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { id: user.id, userName };
-      const accessToken = this.jwtService.sign(payload);
+  //   if (user && (await bcrypt.compare(password, user.password))) {
+  //     const payload: JwtPayload = { id: user.id, userName };
+  //     const accessToken = this.jwtService.sign(payload);
 
-      return new ResponseBody('로그인 성공', { accessToken });
-    } else {
-      return new ResponseBody('로그인 실패');
-    }
-  }
+  //     return new ResponseBody('로그인 성공', { accessToken });
+  //   } else {
+  //     return new ResponseBody('로그인 실패');
+  //   }
+  // }
 
   public async sendAuthSMS(sendAuthSMSRequest: SendAuthSMSRequest) {
     const { mobileNumber } = sendAuthSMSRequest;
+
+    await this.smsService.sendSMS('인증번호 [6974]', [{ to: mobileNumber }]);
+
+    return new ResponseBody('인증번호 전송 성공');
   }
 }

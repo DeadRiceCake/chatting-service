@@ -1,15 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import axios from 'axios';
 import crypto from 'crypto';
-import { ncpConfig } from 'src/config/ncp.config';
 import { MessageBody, SendSMSBody } from './SMS.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SMSService {
-  private readonly baseUrl = ncpConfig.sms.BASE_URL;
-  private readonly serviceId = ncpConfig.sms.SERVICE_ID;
-  private readonly accessKey = ncpConfig.ACCESS_KEY;
-  private readonly fromMobileNumber = ncpConfig.sms.FROM_MOBILE_NUMBER;
+  constructor(private configService: ConfigService) {}
+
+  private readonly baseUrl = this.configService.get<string>(
+    'SMS_BASE_URL',
+    'not set',
+  );
+  private readonly serviceId = this.configService.get<string>(
+    'SMS_SERVICE_ID',
+    'not set',
+  );
+  private readonly accessKey = this.configService.get<string>(
+    'ACCESS_KEY',
+    'not set',
+  );
+  private readonly secretKey = this.configService.get<string>(
+    'SECRET_KEY',
+    'not set',
+  );
+  private readonly fromMobileNumber = this.configService.get<string>(
+    'SMS_FROM_MOBILE_NUMBER',
+    '01012345678',
+  );
 
   public async sendSMS(content: string, toMobileNumbers: MessageBody[]) {
     const uri = `/sms/v2/services/${this.serviceId}/messages`;
@@ -30,29 +48,32 @@ export class SMSService {
       messages: toMobileNumbers,
     };
 
-    const sendSMSResponse = await axios.post(
-      `${this.baseUrl}${uri}`,
-      requestBody,
-      { headers },
-    );
+    try {
+      const sendSMSResponse = await axios.post(
+        `${this.baseUrl}${uri}`,
+        requestBody,
+        { headers },
+      );
 
-    return sendSMSResponse.data;
+      return sendSMSResponse.data;
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('SMS 전송 실패');
+    }
   }
 
   private makeSignature(method: string, uri: string, timestamp: string) {
     const space = ' ';
     const newLine = '\n';
-    const accessKey = ncpConfig.ACCESS_KEY;
-    const secretKey = ncpConfig.SECRET_KEY;
 
-    const hmac = crypto.createHmac('sha256', secretKey);
+    const hmac = crypto.createHmac('sha256', this.secretKey);
     hmac.update(method);
     hmac.update(space);
     hmac.update(uri);
     hmac.update(newLine);
     hmac.update(timestamp);
     hmac.update(newLine);
-    hmac.update(accessKey);
+    hmac.update(this.accessKey);
 
     const hash = hmac.digest('base64');
 
