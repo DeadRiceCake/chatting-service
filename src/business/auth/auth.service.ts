@@ -12,6 +12,7 @@ import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 import { UserRepository } from './user.repository';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SMSService } from 'src/common/SMS/SMS.service';
+import crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -65,7 +66,15 @@ export class AuthService {
   public async sendAuthSMS(sendAuthSMSRequest: SendAuthSMSRequest) {
     const { mobileNumber } = sendAuthSMSRequest;
 
-    await this.smsService.sendSMS('인증번호 [6974]', [{ to: mobileNumber }]);
+    // TODO: 인증번호 생성
+    const authNumber = crypto.randomInt(100000, 999999);
+
+    // TODO: 인증번호 저장(redis)
+
+    await this.smsService.sendSMS(
+      `[노드맨의 서비스] 인증번호 [${authNumber}]를 입력해주세요.`,
+      [{ to: mobileNumber }],
+    );
 
     return new ResponseBody('인증번호 전송 성공');
   }
