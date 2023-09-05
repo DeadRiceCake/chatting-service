@@ -10,16 +10,16 @@ import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { GatewayModule } from './chat/chat.module';
 import { ConfigModule } from '@nestjs/config';
 import { SMSModule } from './common/SMS/SMS.module';
-import ncpConfig from './config/ncp.config';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisClientOptions } from 'redis';
+import redisConfig from './config/redis.config';
+import appConfig from './config/app.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: `${process.env.NODE_ENV}.env`,
-      load: [databaseConfig, ncpConfig],
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(appConfig()),
     TypeOrmModule.forRoot(databaseConfig()),
+    CacheModule.register<RedisClientOptions>(redisConfig()),
     AuthModule,
     BoardsModule,
     GatewayModule,
