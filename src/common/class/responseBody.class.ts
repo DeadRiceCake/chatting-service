@@ -5,9 +5,9 @@ export class ResponseBody {
   message: string;
 
   @ApiProperty({ required: false })
-  data?: object;
+  data?: unknown;
 
-  constructor(message: string, data?: object) {
+  constructor(message: string, data?: unknown) {
     this.message = message;
     this.data = data;
   }

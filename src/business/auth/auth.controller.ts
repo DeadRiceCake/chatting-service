@@ -11,6 +11,8 @@ import { GetUser } from './getUser.decorator';
 import { JwtPayload } from './jwt.payload';
 import { ApiTags } from '@nestjs/swagger';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
+import { ResponseBody } from 'src/common/class/responseBody.class';
+import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,9 +26,22 @@ export class AuthController {
   }
 
   @Post('/sms')
-  public sendAuthSMS(
+  public async sendAuthSMS(
     @Body(ValidationPipe) sendAuthSMSRequest: SendAuthSMSRequest,
   ) {
-    return this.authService.sendAuthSMS(sendAuthSMSRequest);
+    return new ResponseBody(
+      '인증번호 전송 성공',
+      await this.authService.sendAuthSMS(sendAuthSMSRequest),
+    );
+  }
+
+  @Post('/sms/verify')
+  public async verifyAuthSMS(
+    @Body() verifyAuthNumberRequest: VerifyAuthNumberRequest,
+  ) {
+    return new ResponseBody(
+      '인증번호 검증 성공',
+      await this.authService.verifyAuthSMS(verifyAuthNumberRequest),
+    );
   }
 }
