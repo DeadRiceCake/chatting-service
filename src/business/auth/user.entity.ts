@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Board } from '../boards/board.entity';
 
 @Entity()
@@ -7,21 +13,21 @@ export class User {
   id: string;
 
   @Column()
+  mobile_number: string;
+
+  @Column({ type: 'boolean', default: true })
+  is_activated: boolean;
+
+  @Column({ default: 'user' })
   role: string;
 
   @Column()
   nickname: string;
 
-  @Column()
-  mobile_number: string;
-
-  @Column()
-  is_activated: boolean;
-
-  @Column()
+  @Column({ default: 35 })
   rating_score: number;
 
-  @Column()
+  @CreateDateColumn()
   created_at: Date;
 
   @OneToMany(() => Board, (board) => board.user, { eager: true })

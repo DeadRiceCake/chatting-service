@@ -8,6 +8,7 @@ import { Cache } from 'cache-manager';
 import crypto from 'crypto';
 import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
 import { BadRequestException } from '@nestjs/common';
+import { SignUpRequest } from './dto/signupRequest.dto';
 
 @Injectable()
 export class AuthService {
@@ -67,5 +68,27 @@ export class AuthService {
 
   private getAuthMobileNumberVerifiedKey(mobileNumber: string) {
     return `mobile-number:${mobileNumber}:is-verified`;
+  }
+
+  public async signup(signUpRequest: SignUpRequest) {
+    const { mobileNumber, nickname } = signUpRequest;
+
+    const authNumberVerifiedKey =
+      this.getAuthMobileNumberVerifiedKey(mobileNumber);
+    const isVerified = await this.RedisManager.get(authNumberVerifiedKey);
+
+    if (!isVerified) {
+      throw new BadRequestException('핸드폰번호 인증이 완료되지 않았습니다.');
+    } else {
+      await this.RedisManager.del(authNumberVerifiedKey);
+    }
+
+    const user = await this.userRepository.save({
+      id: crypto.randomUUID(),
+      mobile_number: mobileNumber,
+      nickname,
+    });
+
+    return { user };
   }
 }

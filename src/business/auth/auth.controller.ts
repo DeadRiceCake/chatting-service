@@ -13,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
+import { SignUpRequest } from './dto/signupRequest.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -42,6 +43,14 @@ export class AuthController {
     return new ResponseBody(
       '인증번호 검증 성공',
       await this.authService.verifyAuthSMS(verifyAuthNumberRequest),
+    );
+  }
+
+  @Post('/signup')
+  public async signup(@Body() signUpRequest: SignUpRequest) {
+    return new ResponseBody(
+      '회원가입 성공',
+      await this.authService.signup(signUpRequest),
     );
   }
 }
