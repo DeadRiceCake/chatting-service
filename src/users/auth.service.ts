@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './infra/db/repository/user.repository';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SMSService } from 'src/common/SMS/SMS.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';

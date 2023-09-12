@@ -8,6 +8,6 @@ export default (): MysqlConnectionOptions => ({
   password: String(process.env.DB_PASSWORD),
   database: String(process.env.DB_DATABASE),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: process.env.NODE_ENV === 'production' ? false : true,
+  synchronize: false,
   charset: 'utf8mb4',
 });

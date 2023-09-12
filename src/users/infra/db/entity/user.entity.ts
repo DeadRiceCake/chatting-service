@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Board } from '../boards/board.entity';
+import { Board } from '../../../../boards/board.entity';
 
 @Entity()
 export class User {
@@ -24,7 +24,7 @@ export class User {
   @Column()
   nickname: string;
 
-  @Column({ default: 35 })
+  @Column({ type: 'decimal', precision: 3, scale: 1, default: 36.5 })
   rating_score: number;
 
   @CreateDateColumn()

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BoardStatus } from './board.type';
-import { User } from '../users/user.entity';
+import { User } from '../users/infra/db/entity/user.entity';
 
 @Entity()
 export class Board {

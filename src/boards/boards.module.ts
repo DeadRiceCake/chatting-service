@@ -5,7 +5,7 @@ import { Board } from './board.entity';
 import { DatabaseModule } from 'src/common/library/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '../users/users.module';
-import { User } from '../users/user.entity';
+import { User } from '../users/infra/db/entity/user.entity';
 import { BoardRepository } from './board.repository';
 
 @Module({

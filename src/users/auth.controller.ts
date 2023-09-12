@@ -14,11 +14,16 @@ import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
 import { SignUpRequest } from './dto/signupRequest.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './application/command/createUser.command';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private commandBus: CommandBus,
+  ) {}
 
   @Post('/test')
   @UseGuards(AuthGuard())
@@ -48,9 +53,13 @@ export class AuthController {
 
   @Post('/signup')
   public async signup(@Body() signUpRequest: SignUpRequest) {
+    const { mobileNumber, nickname } = signUpRequest;
+
+    const command = new CreateUserCommand(mobileNumber, nickname);
+
     return new ResponseBody(
       '회원가입 성공',
-      await this.authService.signup(signUpRequest),
+      await this.commandBus.execute(command),
     );
   }
 }
