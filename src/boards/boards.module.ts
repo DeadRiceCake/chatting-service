@@ -4,15 +4,15 @@ import { BoardsService } from './boards.service';
 import { Board } from './board.entity';
 import { DatabaseModule } from 'src/common/library/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from '../auth/auth.module';
-import { User } from '../auth/user.entity';
+import { UsersModule } from '../users/users.module';
+import { User } from '../users/user.entity';
 import { BoardRepository } from './board.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Board, User]),
     DatabaseModule,
-    AuthModule,
+    UsersModule,
   ],
   controllers: [BoardsController],
   providers: [BoardsService, BoardRepository],

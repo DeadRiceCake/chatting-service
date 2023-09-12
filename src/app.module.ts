@@ -3,7 +3,7 @@ import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import databaseConfig from './config/database.config';
-import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
@@ -20,7 +20,7 @@ import appConfig from './config/app.config';
     ConfigModule.forRoot(appConfig()),
     TypeOrmModule.forRoot(databaseConfig()),
     CacheModule.register<RedisClientOptions>(redisConfig()),
-    AuthModule,
+    UsersModule,
     BoardsModule,
     GatewayModule,
     SMSModule,

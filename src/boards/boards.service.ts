@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { ResponseBody } from 'src/common/class/responseBody.class';
 import { BoardStatus } from './board.type';
-import { JwtPayload } from '../auth/jwt.payload';
+import { JwtPayload } from '../users/jwt.payload';
 import { BoardRepository } from './board.repository';
 
 @Injectable()

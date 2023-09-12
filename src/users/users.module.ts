@@ -24,4 +24,4 @@ import { SMSService } from 'src/common/SMS/SMS.service';
   providers: [AuthService, JwtStrategy, UserRepository, SMSService],
   exports: [TypeOrmModule, JwtStrategy, PassportModule],
 })
-export class AuthModule {}
+export class UsersModule {}

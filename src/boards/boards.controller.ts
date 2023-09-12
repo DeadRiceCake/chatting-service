@@ -17,8 +17,8 @@ import { ResponseBody } from 'src/common/class/responseBody.class';
 import { BoardStatus } from './board.type';
 import { BoardStatusValidationPipe } from './pipes/boardStatusValidation.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from '../auth/getUser.decorator';
-import { JwtPayload } from '../auth/jwt.payload';
+import { GetUser } from '../users/getUser.decorator';
+import { JwtPayload } from '../users/jwt.payload';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('boards')
