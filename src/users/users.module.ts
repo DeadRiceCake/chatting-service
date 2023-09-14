@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './infra/db/entity/user.entity';
 import { DatabaseModule } from 'src/common/library/database/database.module';
@@ -15,8 +14,15 @@ import { UsersController } from './interface/users.controller';
 import { CreateUserHandler } from './application/command/createUser.handler';
 import { UserFactory } from './domain/user.factory';
 import { AbstractUserRepository } from './domain/repository/abstractUser.reporitory';
+import { SendAuthSMSHandler } from './application/command/sendAuthSMS.handler';
+import { AuthModule } from 'src/auth/auth.module';
+import { VerifyAuthSMSHandler } from './application/command/verifyAuthSMS.handler';
 
-const commandHandlers = [CreateUserHandler];
+const commandHandlers = [
+  CreateUserHandler,
+  SendAuthSMSHandler,
+  VerifyAuthSMSHandler,
+];
 
 const factories = [UserFactory];
 
@@ -32,12 +38,13 @@ const repositories = [
     DatabaseModule,
     SMSModule,
     CqrsModule,
+    AuthModule,
   ],
   controllers: [UsersController],
   providers: [
-    AuthService,
     JwtStrategy,
     SMSService,
+    UserRepository,
     ...repositories,
     ...commandHandlers,
     ...factories,

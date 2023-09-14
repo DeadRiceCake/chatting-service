@@ -28,7 +28,14 @@ export class SMSService {
     },
   ) as string;
 
-  public async sendSMS(content: string, toMobileNumbers: MessageBody[]) {
+  public async sendAuthSMS(mobileNumber: string, authNumber: string) {
+    return await this.sendSMS(
+      `[노드맨의 서비스] 인증번호 [${authNumber}]를 입력해주세요.`,
+      [{ to: mobileNumber }],
+    );
+  }
+
+  private async sendSMS(content: string, toMobileNumbers: MessageBody[]) {
     const uri = `/sms/v2/services/${this.serviceId}/messages`;
     const timestamp = new Date().getTime().toString();
     const signature = this.makeSignature('POST', uri, timestamp);
@@ -56,7 +63,7 @@ export class SMSService {
 
       return sendSMSResponse.data;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
       throw new InternalServerErrorException('SMS 전송 실패');
     }
   }
