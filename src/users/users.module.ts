@@ -14,10 +14,15 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { UsersController } from './interface/users.controller';
 import { CreateUserHandler } from './application/command/createUser.handler';
 import { UserFactory } from './domain/user.factory';
+import { AbstractUserRepository } from './domain/repository/abstractUser.reporitory';
 
 const commandHandlers = [CreateUserHandler];
 
 const factories = [UserFactory];
+
+const repositories = [
+  { provide: AbstractUserRepository, useClass: UserRepository },
+];
 
 @Module({
   imports: [
@@ -32,8 +37,8 @@ const factories = [UserFactory];
   providers: [
     AuthService,
     JwtStrategy,
-    UserRepository,
     SMSService,
+    ...repositories,
     ...commandHandlers,
     ...factories,
   ],

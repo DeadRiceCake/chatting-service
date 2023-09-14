@@ -5,15 +5,15 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { getAuthMobileNumberVerifiedKey } from 'src/utils/redis/getKey';
 import { Cache } from 'cache-manager';
-import { UserRepository } from 'src/users/infra/db/repository/user.repository';
 import * as crypto from 'crypto';
+import { AbstractUserRepository } from 'src/users/domain/repository/abstractUser.reporitory';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     private userFactory: UserFactory,
-    private userRepository: UserRepository,
+    private userRepository: AbstractUserRepository,
     @Inject(CACHE_MANAGER) private RedisManager: Cache,
   ) {}
 
@@ -31,11 +31,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const id = crypto.randomUUID();
 
-    await this.userRepository.save({
-      id,
-      mobile_number: mobileNumber,
-      nickname,
-    });
+    await this.userRepository.saveUser(id, mobileNumber, nickname);
 
     const user = this.userFactory.create(id, mobileNumber, nickname);
 
