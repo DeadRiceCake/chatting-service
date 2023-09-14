@@ -9,7 +9,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { GatewayModule } from './chat/chat.module';
 import { ConfigModule } from '@nestjs/config';
-import { SMSModule } from './common/SMS/SMS.module';
+import { SMSModule } from './SMS/SMS.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisClientOptions } from 'redis';
 import { AuthModule } from './auth/auth.module';

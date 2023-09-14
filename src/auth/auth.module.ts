@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SMSModule } from 'src/common/SMS/SMS.module';
+import { SMSModule } from 'src/SMS/SMS.module';
 
 @Module({
   imports: [SMSModule],

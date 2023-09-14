@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SMSService } from 'src/common/SMS/SMS.service';
+import { SMSService } from 'src/SMS/SMS.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import crypto from 'crypto';
