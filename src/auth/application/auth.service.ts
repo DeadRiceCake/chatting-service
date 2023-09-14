@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SMSService } from 'src/SMS/SMS.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import crypto from 'crypto';
@@ -8,11 +7,12 @@ import {
   getAuthMobileNumberKey,
   getAuthMobileNumberVerifiedKey,
 } from 'src/utils/redis/getKey';
+import { AbstractSMSService } from './adapter/abstractSMS.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private smsService: SMSService,
+    private smsService: AbstractSMSService,
     @Inject(CACHE_MANAGER) private RedisManager: Cache,
   ) {}
 

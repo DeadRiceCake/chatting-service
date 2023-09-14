@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 import { SendAuthSMSCommand } from './sendAuthSMS.command';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'src/auth/application/auth.service';
 
 @Injectable()
 @CommandHandler(SendAuthSMSCommand)

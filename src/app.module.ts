@@ -13,6 +13,7 @@ import { SMSModule } from './SMS/SMS.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisClientOptions } from 'redis';
 import { AuthModule } from './auth/auth.module';
+import { RedisModule } from './redis/redis.module';
 import redisConfig from './config/redis.config';
 import appConfig from './config/app.config';
 
@@ -26,6 +27,7 @@ import appConfig from './config/app.config';
     GatewayModule,
     SMSModule,
     AuthModule,
+    RedisModule,
   ],
   providers: [Logger, { provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })
