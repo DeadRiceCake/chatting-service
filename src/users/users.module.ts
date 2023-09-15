@@ -20,12 +20,15 @@ import { VerifyAuthSMSHandler } from './application/command/verifyAuthSMS.handle
 import { AbstractCacheService } from './application/adapter/abstractCache.service';
 import { RedisService } from './infra/adapter/cache.service';
 import { RedisModule } from 'src/redis/redis.module';
+import { GetUserQueryHandler } from './application/query/getUser.handler';
 
 const commandHandlers = [
   CreateUserHandler,
   SendAuthSMSHandler,
   VerifyAuthSMSHandler,
 ];
+
+const queryHandlers = [GetUserQueryHandler];
 
 const factories = [UserFactory];
 
@@ -53,6 +56,7 @@ const adapters = [{ provide: AbstractCacheService, useClass: RedisService }];
     UserRepository,
     ...repositories,
     ...commandHandlers,
+    ...queryHandlers,
     ...factories,
     ...adapters,
   ],

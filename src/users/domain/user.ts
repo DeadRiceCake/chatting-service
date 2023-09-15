@@ -8,4 +8,16 @@ export class User {
     private ratingScore: number,
     private createdAt: Date,
   ) {}
+
+  public getId(): string {
+    return this.id;
+  }
+
+  public getNickname(): string {
+    return this.nickname;
+  }
+
+  public getRatingScore(): number {
+    return this.ratingScore;
+  }
 }

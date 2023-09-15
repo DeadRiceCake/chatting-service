@@ -1,15 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { Body, Controller, Post, Get, Param } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { SignUpRequest } from './dto/signupRequest.dto';
 import { CreateUserCommand } from '../application/command/createUser.command';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SendAuthSMSCommand } from '../application/command/sendAuthSMS.command';
 import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
 import { VerifyAuthSMSCommand } from '../application/command/verifyAuthSMS.command';
+import { GetUserQuery } from '../application/query/getUser.Query';
 
 @Controller('users')
 export class UsersController {
-  constructor(private commandBus: CommandBus) {}
+  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Post('/sms')
   public async sendAuthSMS(@Body() sendAuthSMSRequest: SendAuthSMSRequest) {
@@ -35,5 +36,12 @@ export class UsersController {
     const command = new CreateUserCommand(mobileNumber, nickname);
 
     return this.commandBus.execute(command);
+  }
+
+  @Get('/:userId')
+  getUser(@Param('userId') id: string) {
+    const query = new GetUserQuery(id);
+
+    return this.queryBus.execute(query);
   }
 }

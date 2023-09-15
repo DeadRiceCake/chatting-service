@@ -8,4 +8,5 @@ export abstract class AbstractUserRepository {
   ) => Promise<void>;
 
   findOneByMobileNumber: (mobileNumber: string) => Promise<User | null>;
+  findOneByUserId: (userId: string) => Promise<User | null>;
 }

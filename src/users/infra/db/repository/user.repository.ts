@@ -60,4 +60,35 @@ export class UserRepository
       created_at,
     );
   }
+
+  async findOneByUserId(id: string): Promise<User | null> {
+    const userEntity = await this.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!userEntity) {
+      return null;
+    }
+
+    const {
+      mobile_number,
+      is_activated,
+      role,
+      nickname,
+      rating_score,
+      created_at,
+    } = userEntity;
+
+    return this.userFactory.reconstitute(
+      id,
+      mobile_number,
+      is_activated,
+      role,
+      nickname,
+      rating_score,
+      created_at,
+    );
+  }
 }
