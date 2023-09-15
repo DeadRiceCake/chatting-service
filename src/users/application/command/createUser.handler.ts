@@ -1,7 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateUserCommand } from './createUser.command';
 import { UserFactory } from 'src/users/domain/user.factory';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  ConflictException,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { AbstractUserRepository } from 'src/users/domain/repository/abstractUser.reporitory';
 import { AbstractCacheService } from '../adapter/abstractCache.service';
@@ -26,6 +30,14 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
       throw new BadRequestException('핸드폰번호 인증이 완료되지 않았습니다.');
     } else {
       await this.cacheService.deleteAuthMobileNumberVerified(mobileNumber);
+    }
+
+    const existUser = await this.userRepository.findOneByMobileNumber(
+      mobileNumber,
+    );
+
+    if (existUser) {
+      throw new ConflictException('이미 존재하는 사용자입니다.');
     }
 
     const id = randomUUID();

@@ -27,4 +27,24 @@ export class UserFactory {
 
     return user;
   }
+
+  public reconstitute(
+    id: string,
+    mobileNumber: string,
+    isActivated: boolean,
+    role: string,
+    nickname: string,
+    ratingScore: number,
+    createdAt: Date,
+  ) {
+    return new User(
+      id,
+      mobileNumber,
+      isActivated,
+      role,
+      nickname,
+      ratingScore,
+      createdAt,
+    );
+  }
 }

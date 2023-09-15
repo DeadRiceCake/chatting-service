@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { SignUpRequest } from '../dto/signupRequest.dto';
+import { SignUpRequest } from './dto/signupRequest.dto';
 import { CreateUserCommand } from '../application/command/createUser.command';
-import { SendAuthSMSRequest } from '../dto/sendAuthSMSRequest.dto';
+import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SendAuthSMSCommand } from '../application/command/sendAuthSMS.command';
 import { VerifyAuthNumberRequest } from './dto/verifyAuthNumberRequest.dto';
 import { VerifyAuthSMSCommand } from '../application/command/verifyAuthSMS.command';

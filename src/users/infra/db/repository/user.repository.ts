@@ -1,15 +1,20 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { User } from '../entity/user.entity';
+import { User as UserEntity } from '../entity/user.entity';
 import { AbstractUserRepository } from 'src/users/domain/repository/abstractUser.reporitory';
+import { User } from 'src/users/domain/user';
+import { UserFactory } from 'src/users/domain/user.factory';
 
 @Injectable()
 export class UserRepository
-  extends Repository<User>
+  extends Repository<UserEntity>
   implements AbstractUserRepository
 {
-  constructor(private dataSource: DataSource) {
-    super(User, dataSource.createEntityManager());
+  constructor(
+    private dataSource: DataSource,
+    private userFactory: UserFactory,
+  ) {
+    super(UserEntity, dataSource.createEntityManager());
   }
 
   async saveUser(
@@ -22,5 +27,37 @@ export class UserRepository
       mobile_number: mobileNumber,
       nickname,
     });
+  }
+
+  async findOneByMobileNumber(mobileNumber: string): Promise<User | null> {
+    const userEntity = await this.findOne({
+      where: {
+        mobile_number: mobileNumber,
+      },
+    });
+
+    if (!userEntity) {
+      return null;
+    }
+
+    const {
+      id,
+      mobile_number,
+      is_activated,
+      role,
+      nickname,
+      rating_score,
+      created_at,
+    } = userEntity;
+
+    return this.userFactory.reconstitute(
+      id,
+      mobile_number,
+      is_activated,
+      role,
+      nickname,
+      rating_score,
+      created_at,
+    );
   }
 }

@@ -8,8 +8,4 @@ export class User {
     private ratingScore: number,
     private createdAt: Date,
   ) {}
-
-  public getId(): Readonly<string> {
-    return this.id;
-  }
 }
