@@ -1,36 +1,32 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+import { Injectable } from '@nestjs/common';
 import crypto from 'crypto';
 import { BadRequestException } from '@nestjs/common';
-import {
-  getAuthMobileNumberKey,
-  getAuthMobileNumberVerifiedKey,
-} from 'src/utils/redis/getKey';
 import { AbstractSMSService } from './adapter/abstractSMS.service';
+import { AbstractCacheService } from './adapter/abstractCache.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private smsService: AbstractSMSService,
-    @Inject(CACHE_MANAGER) private RedisManager: Cache,
+    private cacheService: AbstractCacheService,
   ) {}
 
   public async sendAuthSMS(mobileNumber: string) {
-    const authMobileNumberKey = getAuthMobileNumberKey(mobileNumber);
     const authNumber = crypto.randomInt(100000, 999999).toString();
     const authNumberTTL = 5 * 60 * 1000;
 
-    await this.RedisManager.set(authMobileNumberKey, authNumber, authNumberTTL);
+    await this.cacheService.setAuthMobileNumber(
+      mobileNumber,
+      authNumber,
+      authNumberTTL,
+    );
 
     return await this.smsService.sendAuthSMS(mobileNumber, authNumber);
   }
 
   public async verifyAuthSMS(mobileNumber: string, authNumber: string) {
-    const authMobileNumberKey = getAuthMobileNumberKey(mobileNumber);
-
-    const registeredAuthNumber = await this.RedisManager.get(
-      authMobileNumberKey,
+    const registeredAuthNumber = await this.cacheService.getAuthMobileNumber(
+      mobileNumber,
     );
 
     if (!registeredAuthNumber) {
@@ -41,14 +37,12 @@ export class AuthService {
       throw new BadRequestException('인증번호가 일치하지 않습니다.');
     }
 
-    await this.RedisManager.del(authMobileNumberKey);
+    await this.cacheService.deleteAuthMobileNumber(mobileNumber);
 
-    const authNumberVerifiedKey = getAuthMobileNumberVerifiedKey(mobileNumber);
     const authNumberVerifiedTTL = 30 * 60 * 1000;
 
-    await this.RedisManager.set(
-      authNumberVerifiedKey,
-      true,
+    await this.cacheService.setAuthMobileNumberVerified(
+      mobileNumber,
       authNumberVerifiedTTL,
     );
   }

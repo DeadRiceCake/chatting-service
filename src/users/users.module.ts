@@ -17,6 +17,9 @@ import { AbstractUserRepository } from './domain/repository/abstractUser.reporit
 import { SendAuthSMSHandler } from './application/command/sendAuthSMS.handler';
 import { AuthModule } from 'src/auth/auth.module';
 import { VerifyAuthSMSHandler } from './application/command/verifyAuthSMS.handler';
+import { AbstractCacheService } from './application/adapter/abstractCache.service';
+import { RedisService } from './infra/adapter/cache.service';
+import { RedisModule } from 'src/redis/redis.module';
 
 const commandHandlers = [
   CreateUserHandler,
@@ -30,6 +33,8 @@ const repositories = [
   { provide: AbstractUserRepository, useClass: UserRepository },
 ];
 
+const adapters = [{ provide: AbstractCacheService, useClass: RedisService }];
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -39,6 +44,7 @@ const repositories = [
     SMSModule,
     CqrsModule,
     AuthModule,
+    RedisModule,
   ],
   controllers: [UsersController],
   providers: [
@@ -48,6 +54,7 @@ const repositories = [
     ...repositories,
     ...commandHandlers,
     ...factories,
+    ...adapters,
   ],
   exports: [TypeOrmModule, JwtStrategy, PassportModule],
 })
