@@ -46,6 +46,8 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const user = this.userFactory.create(id, mobileNumber, nickname);
 
+    // TODO: jwt 발급
+
     return user;
   }
 }
