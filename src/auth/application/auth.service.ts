@@ -3,6 +3,11 @@ import crypto from 'crypto';
 import { BadRequestException } from '@nestjs/common';
 import { AbstractSMSService } from './adapter/abstractSMS.service';
 import { AbstractCacheService } from './adapter/abstractCache.service';
+import { Role } from '../interface/model/role.model';
+import * as jwt from 'jsonwebtoken';
+import { jwtConfig } from 'src/config/jwt.config';
+import { RefreshTokenPayload } from '../interface/model/refreshTokenPayload.model';
+import { AccessTokenPayload } from '../interface/model/accessTokenPayload.model';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +29,23 @@ export class AuthService {
     return await this.smsService.sendAuthSMS(mobileNumber, authNumber);
   }
 
-  public async verifyAuthSMS(mobileNumber: string, authNumber: string) {
+  public async signIn(userId: string, role: Role) {
+    const refreshToken = await this.createRefreshToken(userId);
+    const accessToken = await this.createAccessToken(userId, role);
+
+    await this.cacheService.setRefreshToken(
+      userId,
+      refreshToken,
+      jwtConfig.refreshTokenExpiresIn,
+    );
+
+    return {
+      refreshToken,
+      accessToken,
+    };
+  }
+
+  public async checkAuthMobileNumber(mobileNumber: string, authNumber: string) {
     const registeredAuthNumber = await this.cacheService.getAuthMobileNumber(
       mobileNumber,
     );
@@ -38,12 +59,35 @@ export class AuthService {
     }
 
     await this.cacheService.deleteAuthMobileNumber(mobileNumber);
+  }
 
-    const authNumberVerifiedTTL = 30 * 60 * 1000;
+  private async createRefreshToken(id: string) {
+    const refreshTokenPayload: RefreshTokenPayload = {
+      id,
+    };
 
-    await this.cacheService.setAuthMobileNumberVerified(
-      mobileNumber,
-      authNumberVerifiedTTL,
+    const refreshToken = jwt.sign(
+      refreshTokenPayload,
+      jwtConfig.refreshTokenSecret,
     );
+
+    return refreshToken;
+  }
+
+  private async createAccessToken(id: string, role: Role) {
+    const accessTokenPayload: AccessTokenPayload = {
+      id,
+      role,
+    };
+
+    const accessToken = jwt.sign(
+      accessTokenPayload,
+      jwtConfig.accessTokenSecret,
+      {
+        expiresIn: jwtConfig.accessTokenExpiresIn,
+      },
+    );
+
+    return accessToken;
   }
 }

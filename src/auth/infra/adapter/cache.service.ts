@@ -10,28 +10,31 @@ export class RedisService implements AbstractCacheService {
     return await this.cacheService.getAuthMobileNumber(mobileNumber);
   }
 
-  setAuthMobileNumber(
+  async setAuthMobileNumber(
     mobileNumber: string,
     authNumber: string,
     ttl: number,
   ): Promise<void> {
-    return this.cacheService.setAuthMobileNumber(mobileNumber, authNumber, ttl);
+    return await this.cacheService.setAuthMobileNumber(
+      mobileNumber,
+      authNumber,
+      ttl,
+    );
   }
 
-  deleteAuthMobileNumber(mobileNumber: string): Promise<void> {
-    return this.cacheService.deleteAuthMobileNumber(mobileNumber);
+  async deleteAuthMobileNumber(mobileNumber: string): Promise<void> {
+    return await this.cacheService.deleteAuthMobileNumber(mobileNumber);
   }
 
-  getAuthMobileNumberVerified(
-    mobileNumber: string,
-  ): Promise<boolean | undefined> {
-    return this.cacheService.getAuthMobileNumberVerified(mobileNumber);
+  async getRefreshToken(refreshToken: string): Promise<string | undefined> {
+    return await this.cacheService.getRefreshToken(refreshToken);
   }
 
-  setAuthMobileNumberVerified(
-    mobileNumber: string,
+  async setRefreshToken(
+    userId: string,
+    refreshToken: string,
     ttl: number,
   ): Promise<void> {
-    return this.cacheService.setAuthMobileNumberVerified(mobileNumber, ttl);
+    return await this.cacheService.setRefreshToken(userId, refreshToken, ttl);
   }
 }

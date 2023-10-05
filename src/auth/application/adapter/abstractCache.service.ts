@@ -11,12 +11,11 @@ export abstract class AbstractCacheService {
 
   abstract deleteAuthMobileNumber(mobileNumber: string): Promise<void>;
 
-  abstract getAuthMobileNumberVerified(
-    mobileNumber: string,
-  ): Promise<boolean | undefined>;
+  abstract getRefreshToken(refreshToken: string): Promise<string | undefined>;
 
-  abstract setAuthMobileNumberVerified(
-    mobileNumber: string,
+  abstract setRefreshToken(
+    userId: string,
+    refreshToken: string,
     ttl: number,
   ): Promise<void>;
 }

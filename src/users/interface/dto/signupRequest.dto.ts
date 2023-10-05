@@ -5,5 +5,5 @@ export class SignUpRequest {
   mobileNumber: string;
 
   @IsString()
-  nickname: string;
+  authNumber: string;
 }

@@ -28,32 +28,27 @@ export class RedisService {
     await this.RedisManager.del(authMobileNumberKey);
   }
 
-  public async getAuthMobileNumberVerified(mobileNumber: string) {
-    const authMobileNumberVerifiedKey =
-      this.getAuthMobileNumberVerifiedKey(mobileNumber);
+  public async getRefreshToken(userId: string) {
+    const refreshTokenKey = this.getRefreshTokenKey(userId);
 
-    return await this.RedisManager.get<boolean>(authMobileNumberVerifiedKey);
+    return await this.RedisManager.get<string>(refreshTokenKey);
   }
 
-  public async setAuthMobileNumberVerified(mobileNumber: string, ttl: number) {
-    const authMobileNumberVerifiedKey =
-      this.getAuthMobileNumberVerifiedKey(mobileNumber);
+  public async setRefreshToken(
+    userId: string,
+    refreshToken: string,
+    ttl: number,
+  ) {
+    const refreshTokenKey = this.getRefreshTokenKey(userId);
 
-    await this.RedisManager.set(authMobileNumberVerifiedKey, true, ttl);
-  }
-
-  public async deleteAuthMobileNumberVerified(mobileNumber: string) {
-    const authMobileNumberVerifiedKey =
-      this.getAuthMobileNumberVerifiedKey(mobileNumber);
-
-    await this.RedisManager.del(authMobileNumberVerifiedKey);
+    await this.RedisManager.set(refreshTokenKey, refreshToken, ttl);
   }
 
   private getAuthMobileNumberKey(mobileNumber: string) {
     return `mobile-number:${mobileNumber}:auth-number`;
   }
 
-  private getAuthMobileNumberVerifiedKey(mobileNumber: string) {
-    return `mobile-number:${mobileNumber}:is-verified`;
+  private getRefreshTokenKey(userId: string) {
+    return `user:${userId}:refresh-token`;
   }
 }
