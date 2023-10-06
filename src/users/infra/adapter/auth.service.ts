@@ -24,4 +24,8 @@ export class AuthService implements AbstractAuthService {
   async sendAuthSMS(mobileNumber: string): Promise<void> {
     await this.authService.sendAuthSMS(mobileNumber);
   }
+
+  async refresh(refreshToken: string): Promise<string> {
+    return await this.authService.refresh(refreshToken);
+  }
 }

@@ -74,7 +74,36 @@ export class AuthService {
       console.log(err);
       throw new CustomUnauthorizedException(
         ERROR_CODE.AUTH.INVALID_ACCESS_TOKEN,
-        '유효하지 않은 토큰입니다.',
+        '유효하지 않은 엑세스 토큰입니다.',
+      );
+    }
+  }
+
+  public async refresh(refreshToken: string) {
+    const decodedRefreshToken = jwt.decode(refreshToken) as RefreshTokenPayload;
+
+    const registeredRefreshToken = await this.cacheService.getRefreshToken(
+      refreshToken,
+    );
+
+    if (registeredRefreshToken) {
+      throw new CustomUnauthorizedException(
+        ERROR_CODE.AUTH.EXPIRED_REFRESH_TOKEN,
+        '만료됐거나 존재하지 않는 리프레쉬 토큰입니다.',
+      );
+    }
+
+    try {
+      jwt.verify(refreshToken, jwtConfig.refreshTokenSecret);
+
+      const { id } = decodedRefreshToken;
+
+      return await this.createAccessToken(id, 'user');
+    } catch (err) {
+      console.log(err);
+      throw new CustomUnauthorizedException(
+        ERROR_CODE.AUTH.EXPIRED_REFRESH_TOKEN,
+        '유효하지 않은 리프레쉬 토큰입니다.',
       );
     }
   }

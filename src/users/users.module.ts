@@ -17,11 +17,13 @@ import { GetUserQueryHandler } from './application/query/getUser.handler';
 import { AbstractAuthService } from './application/adapter/abstractAuth.service';
 import { AuthService } from './infra/adapter/auth.service';
 import { SignInUserHandler } from './application/command/signInUser.handler';
+import { RefreshUserHandler } from './application/command/refreshUserhandler';
 
 const commandHandlers = [
   CreateUserHandler,
   SendAuthSMSHandler,
   SignInUserHandler,
+  RefreshUserHandler,
 ];
 
 const queryHandlers = [GetUserQueryHandler];

@@ -6,6 +6,8 @@ import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SendAuthSMSCommand } from '../application/command/sendAuthSMS.command';
 import { GetUserQuery } from '../application/query/getUser.Query';
 import { SignInUserCommand } from '../application/command/signInUser.command';
+import { RefreshUserRequest } from './dto/refreshUserRequest.dto';
+import { RefreshUserCommand } from '../application/command/refreshUser.command';
 
 @Controller('users')
 export class UsersController {
@@ -31,6 +33,14 @@ export class UsersController {
   signInUser(@Body() signInRequest: SignUpRequest) {
     const { mobileNumber, authNumber } = signInRequest;
     const command = new SignInUserCommand(mobileNumber, authNumber);
+
+    return this.commandBus.execute(command);
+  }
+
+  @Post('/refresh')
+  refreshUser(@Body() refreshUserRequest: RefreshUserRequest) {
+    const { refreshToken } = refreshUserRequest;
+    const command = new RefreshUserCommand(refreshToken);
 
     return this.commandBus.execute(command);
   }

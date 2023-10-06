@@ -9,4 +9,6 @@ export abstract class AbstractAuthService {
   ): Promise<{ refreshToken: string; accessToken: string }>;
 
   abstract sendAuthSMS(mobileNumber: string): Promise<void>;
+
+  abstract refresh(refreshToken: string): Promise<string>;
 }
