@@ -17,4 +17,8 @@ export class AuthService implements AbstractAuthService {
   async signIn(userId: string, role: Role) {
     return await this.authService.signIn(userId, role);
   }
+
+  async sendAuthSMS(mobileNumber: string): Promise<void> {
+    await this.authService.sendAuthSMS(mobileNumber);
+  }
 }

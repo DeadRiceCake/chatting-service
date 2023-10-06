@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './infra/db/entity/user.entity';
-import { DatabaseModule } from 'src/common/library/database/database.module';
 import { PassportModule } from '@nestjs/passport';
 import { UserRepository } from './infra/db/repository/user.repository';
 import { SMSModule } from 'src/SMS/SMS.module';
@@ -17,8 +16,13 @@ import { RedisModule } from 'src/redis/redis.module';
 import { GetUserQueryHandler } from './application/query/getUser.handler';
 import { AbstractAuthService } from './application/adapter/abstractAuth.service';
 import { AuthService } from './infra/adapter/auth.service';
+import { SignInUserHandler } from './application/command/signInUser.handler';
 
-const commandHandlers = [CreateUserHandler, SendAuthSMSHandler];
+const commandHandlers = [
+  CreateUserHandler,
+  SendAuthSMSHandler,
+  SignInUserHandler,
+];
 
 const queryHandlers = [GetUserQueryHandler];
 
@@ -34,7 +38,6 @@ const adapters = [{ provide: AbstractAuthService, useClass: AuthService }];
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forFeature([User]),
-    DatabaseModule,
     SMSModule,
     CqrsModule,
     AuthModule,

@@ -1,16 +1,18 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
-import { AuthService } from 'src/auth/application/auth.service';
 import { SignInUserCommand } from './signInUser.command';
+import { AbstractAuthService } from '../adapter/abstractAuth.service';
 
 @Injectable()
 @CommandHandler(SignInUserCommand)
 export class SignInUserHandler implements ICommandHandler<SignInUserCommand> {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AbstractAuthService) {}
 
-  async execute(command: SignInUserCommand): Promise<void> {
-    const { mobileNumber } = command;
+  async execute(command: SignInUserCommand) {
+    const { mobileNumber, authNumber } = command;
 
-    await this.authService.sendAuthSMS(mobileNumber);
+    await this.authService.checkAuthMobileNumber(mobileNumber, authNumber);
+
+    return await this.authService.signIn(mobileNumber, 'user');
   }
 }

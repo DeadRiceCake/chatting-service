@@ -5,6 +5,7 @@ import { CreateUserCommand } from '../application/command/createUser.command';
 import { SendAuthSMSRequest } from './dto/sendAuthSMSRequest.dto';
 import { SendAuthSMSCommand } from '../application/command/sendAuthSMS.command';
 import { GetUserQuery } from '../application/query/getUser.Query';
+import { SignInUserCommand } from '../application/command/signInUser.command';
 
 @Controller('users')
 export class UsersController {
@@ -26,13 +27,13 @@ export class UsersController {
     return this.commandBus.execute(command);
   }
 
-  // @Post('/signin')
-  // signInUser(@Body() signInRequest: SignUpRequest) {
-  //   const { mobileNumber, nickname } = signInRequest;
-  //   const command = new CreateUserCommand(mobileNumber, nickname);
+  @Post('/signin')
+  signInUser(@Body() signInRequest: SignUpRequest) {
+    const { mobileNumber, authNumber } = signInRequest;
+    const command = new SignInUserCommand(mobileNumber, authNumber);
 
-  //   return this.commandBus.execute(command);
-  // }
+    return this.commandBus.execute(command);
+  }
 
   @Get('/:userId')
   getUser(@Param('userId') id: string) {

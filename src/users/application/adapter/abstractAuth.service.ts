@@ -10,4 +10,6 @@ export abstract class AbstractAuthService {
     userId: string,
     role: Role,
   ): Promise<{ refreshToken: string; accessToken: string }>;
+
+  abstract sendAuthSMS(mobileNumber: string): Promise<void>;
 }
