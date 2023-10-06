@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import databaseConfig from './config/database.config';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { GatewayModule } from './chat/chat.module';
 import { ConfigModule } from '@nestjs/config';
@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { RedisModule } from './redis/redis.module';
 import redisConfig from './config/redis.config';
 import appConfig from './config/app.config';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -29,7 +30,11 @@ import appConfig from './config/app.config';
     AuthModule,
     RedisModule,
   ],
-  providers: [Logger, { provide: APP_FILTER, useClass: HttpExceptionFilter }],
+  providers: [
+    Logger,
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
+    { provide: APP_GUARD, useClass: AuthGuard },
+  ],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}

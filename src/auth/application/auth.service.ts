@@ -9,6 +9,7 @@ import { RefreshTokenPayload } from '../interface/model/refreshTokenPayload.mode
 import { AccessTokenPayload } from '../interface/model/accessTokenPayload.model';
 import { CustomBadRequestException } from 'src/common/exception/badRequest.exception';
 import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
+import { CustomUnauthorizedException } from 'src/common/exception/unauthorization.exception';
 
 @Injectable()
 export class AuthService {
@@ -53,6 +54,31 @@ export class AuthService {
     };
   }
 
+  public verify(accessToken: string) {
+    const decodedAccessToken = jwt.decode(accessToken) as AccessTokenPayload;
+
+    if ((decodedAccessToken.exp as number) < Date.now() / 1000) {
+      throw new CustomUnauthorizedException(
+        ERROR_CODE.AUTH.EXPIRED_ACCESS_TOKEN,
+        '만료된 엑세스 토큰입니다.',
+      );
+    }
+
+    try {
+      jwt.verify(accessToken, jwtConfig.accessTokenSecret);
+
+      const { id, role } = decodedAccessToken;
+
+      return { userId: id, role };
+    } catch (err) {
+      console.log(err);
+      throw new CustomUnauthorizedException(
+        ERROR_CODE.AUTH.INVALID_ACCESS_TOKEN,
+        '유효하지 않은 토큰입니다.',
+      );
+    }
+  }
+
   private async checkAuthMobileNumber(
     mobileNumber: string,
     authNumber: string,
@@ -62,7 +88,7 @@ export class AuthService {
     );
 
     if (!registeredAuthNumber) {
-      throw new CustomBadRequestException(
+      throw new CustomUnauthorizedException(
         ERROR_CODE.AUTH.INVALID_AUTH_NUMBER,
         '인증번호가 없거나 만료되었습니다.',
       );
