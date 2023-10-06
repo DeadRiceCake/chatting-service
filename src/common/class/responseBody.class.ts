@@ -1,14 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { RESPONSE_CODE } from '../constant/responseCode.constants';
+
+interface ResponseBodyOptions {
+  code?: string;
+  data?: unknown;
+}
 
 export class ResponseBody {
   @ApiProperty()
-  message: string;
+  code: string;
 
   @ApiProperty({ required: false })
   data?: unknown;
 
-  constructor(message: string, data?: unknown) {
-    this.message = message;
-    this.data = data;
+  constructor(responseBodyOptions?: ResponseBodyOptions) {
+    this.code = responseBodyOptions?.code || RESPONSE_CODE.SUCCESS;
+    this.data = responseBodyOptions?.data;
   }
 }

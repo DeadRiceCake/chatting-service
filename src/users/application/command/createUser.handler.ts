@@ -5,6 +5,7 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { AbstractUserRepository } from 'src/users/domain/repository/abstractUser.reporitory';
 import { AbstractAuthService } from '../adapter/abstractAuth.service';
+import { ResponseBody } from 'src/common/class/responseBody.class';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
@@ -34,7 +35,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
       'user',
     );
 
-    return { user, accessToken, refreshToken };
+    return new ResponseBody({ data: { user, accessToken, refreshToken } });
   }
 
   private async checkDuplicateUser(mobileNumber: string) {

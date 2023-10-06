@@ -10,8 +10,10 @@ export class BoardsService {
   constructor(private boardRepository: BoardRepository) {}
 
   public async getAllBoards(user: JwtPayload): Promise<ResponseBody> {
-    return new ResponseBody('조회에 성공하였습니다.', {
-      boards: await this.boardRepository.getAllBoards(user.id),
+    return new ResponseBody({
+      data: {
+        boards: await this.boardRepository.getAllBoards(user.id),
+      },
     });
   }
 
@@ -27,7 +29,7 @@ export class BoardsService {
       user.id,
     );
 
-    return new ResponseBody('생성이 완료되었습니다.', board);
+    return new ResponseBody({ data: board });
   }
 
   public async getBoardById(id: number): Promise<ResponseBody> {
@@ -37,7 +39,7 @@ export class BoardsService {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
-    return new ResponseBody('조회에 성공하였습니다.', board);
+    return new ResponseBody({ data: board });
   }
 
   public async deleteBoardById(
@@ -53,7 +55,7 @@ export class BoardsService {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
-    return new ResponseBody(`${id}번 게시글 삭제에 성공했습니다.`);
+    return new ResponseBody();
   }
 
   public async updateBoardStatusById(
@@ -70,6 +72,6 @@ export class BoardsService {
 
     const updateResult = await this.boardRepository.save(foundBoard);
 
-    return new ResponseBody('수정에 성공하였습니다.', updateResult);
+    return new ResponseBody({ data: updateResult });
   }
 }
