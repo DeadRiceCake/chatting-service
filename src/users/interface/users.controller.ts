@@ -8,11 +8,13 @@ import { GetUserQuery } from '../application/query/getUser.Query';
 import { SignInUserCommand } from '../application/command/signInUser.command';
 import { RefreshUserRequest } from './dto/refreshUserRequest.dto';
 import { RefreshUserCommand } from '../application/command/refreshUser.command';
+import { Public } from 'src/auth/publicAPI.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
+  @Public()
   @Post('/sms')
   public async sendAuthSMS(@Body() sendAuthSMSRequest: SendAuthSMSRequest) {
     const { mobileNumber } = sendAuthSMSRequest;
@@ -21,6 +23,7 @@ export class UsersController {
     return await this.commandBus.execute(command);
   }
 
+  @Public()
   @Post('/signup')
   createUser(@Body() signUpRequest: SignUpRequest) {
     const { mobileNumber, authNumber } = signUpRequest;
@@ -29,6 +32,7 @@ export class UsersController {
     return this.commandBus.execute(command);
   }
 
+  @Public()
   @Post('/signin')
   signInUser(@Body() signInRequest: SignUpRequest) {
     const { mobileNumber, authNumber } = signInRequest;
@@ -37,6 +41,7 @@ export class UsersController {
     return this.commandBus.execute(command);
   }
 
+  @Public()
   @Post('/refresh')
   refreshUser(@Body() refreshUserRequest: RefreshUserRequest) {
     const { refreshToken } = refreshUserRequest;
