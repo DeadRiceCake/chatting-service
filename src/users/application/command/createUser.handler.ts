@@ -1,11 +1,13 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateUserCommand } from './createUser.command';
 import { UserFactory } from 'src/users/domain/user.factory';
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { AbstractUserRepository } from 'src/users/domain/repository/abstractUser.reporitory';
 import { AbstractAuthService } from '../adapter/abstractAuth.service';
 import { ResponseBody } from 'src/common/class/responseBody.class';
+import { CustomConflictException } from 'src/common/exception/conflict.exception';
+import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
@@ -44,7 +46,10 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     );
 
     if (existUser) {
-      throw new ConflictException('이미 존재하는 사용자입니다.');
+      throw new CustomConflictException(
+        ERROR_CODE.USER.DUPLICATE_MOBILE_NUMBER,
+        '이미 가입된 핸드폰 번호입니다.',
+      );
     }
   }
 }

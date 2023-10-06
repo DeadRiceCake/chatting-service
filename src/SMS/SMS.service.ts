@@ -1,9 +1,11 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import crypto from 'crypto';
 import { MessageBody, SendSMSBody } from './SMS.type';
 import { ConfigService } from '@nestjs/config';
 import { NCPConfig } from 'src/config/ncp.config';
+import { CustomInternalServerErrorException } from 'src/common/exception/internalServerError.exception';
+import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 
 @Injectable()
 export class SMSService {
@@ -64,7 +66,10 @@ export class SMSService {
       return sendSMSResponse.data;
     } catch (error) {
       console.error(error.response.data);
-      throw new InternalServerErrorException('SMS 전송 실패');
+      throw new CustomInternalServerErrorException(
+        ERROR_CODE.SMS.SEND_SMS_FAILED,
+        'SMS 전송 실패',
+      );
     }
   }
 

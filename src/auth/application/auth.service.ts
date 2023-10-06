@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import crypto from 'crypto';
-import { BadRequestException } from '@nestjs/common';
 import { AbstractSMSService } from './adapter/abstractSMS.service';
 import { AbstractCacheService } from './adapter/abstractCache.service';
 import { Role } from '../interface/model/role.model';
@@ -8,6 +7,8 @@ import * as jwt from 'jsonwebtoken';
 import { jwtConfig } from 'src/config/jwt.config';
 import { RefreshTokenPayload } from '../interface/model/refreshTokenPayload.model';
 import { AccessTokenPayload } from '../interface/model/accessTokenPayload.model';
+import { CustomBadRequestException } from 'src/common/exception/badRequest.exception';
+import { ERROR_CODE } from 'src/common/constant/errorCode.constants';
 
 @Injectable()
 export class AuthService {
@@ -61,11 +62,17 @@ export class AuthService {
     );
 
     if (!registeredAuthNumber) {
-      throw new BadRequestException('인증번호가 없거나 만료되었습니다.');
+      throw new CustomBadRequestException(
+        ERROR_CODE.AUTH.INVALID_AUTH_NUMBER,
+        '인증번호가 없거나 만료되었습니다.',
+      );
     }
 
     if (registeredAuthNumber !== authNumber) {
-      throw new BadRequestException('인증번호가 일치하지 않습니다.');
+      throw new CustomBadRequestException(
+        ERROR_CODE.AUTH.INVALID_AUTH_NUMBER,
+        '인증번호가 일치하지 않습니다.',
+      );
     }
 
     await this.cacheService.deleteAuthMobileNumber(mobileNumber);
