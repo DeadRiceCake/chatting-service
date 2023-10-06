@@ -7,15 +7,18 @@ import { Role } from 'src/auth/interface/model/role.model';
 export class AuthService implements AbstractAuthService {
   constructor(private authService: ExternalAuthService) {}
 
-  async checkAuthMobileNumber(
+  async signIn(
+    userId: string,
+    role: Role,
     mobileNumber: string,
     authNumber: string,
-  ): Promise<void> {
-    await this.authService.checkAuthMobileNumber(mobileNumber, authNumber);
-  }
-
-  async signIn(userId: string, role: Role) {
-    return await this.authService.signIn(userId, role);
+  ) {
+    return await this.authService.signIn(
+      userId,
+      role,
+      mobileNumber,
+      authNumber,
+    );
   }
 
   async sendAuthSMS(mobileNumber: string): Promise<void> {

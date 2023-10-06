@@ -21,8 +21,6 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     await this.checkDuplicateUser(mobileNumber);
 
-    await this.authService.checkAuthMobileNumber(mobileNumber, authNumber);
-
     const id = randomUUID();
     const nickname = `user_${id.split('-')[0]}`;
 
@@ -33,6 +31,8 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     const { accessToken, refreshToken } = await this.authService.signIn(
       user.getId(),
       'user',
+      mobileNumber,
+      authNumber,
     );
 
     return new ResponseBody({ data: { user, accessToken, refreshToken } });

@@ -29,7 +29,14 @@ export class AuthService {
     return await this.smsService.sendAuthSMS(mobileNumber, authNumber);
   }
 
-  public async signIn(userId: string, role: Role) {
+  public async signIn(
+    userId: string,
+    role: Role,
+    mobileNumber: string,
+    authNumber: string,
+  ) {
+    await this.checkAuthMobileNumber(mobileNumber, authNumber);
+
     const refreshToken = await this.createRefreshToken(userId);
     const accessToken = await this.createAccessToken(userId, role);
 
@@ -45,7 +52,10 @@ export class AuthService {
     };
   }
 
-  public async checkAuthMobileNumber(mobileNumber: string, authNumber: string) {
+  private async checkAuthMobileNumber(
+    mobileNumber: string,
+    authNumber: string,
+  ) {
     const registeredAuthNumber = await this.cacheService.getAuthMobileNumber(
       mobileNumber,
     );
